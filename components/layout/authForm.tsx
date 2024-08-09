@@ -9,14 +9,14 @@ interface AuthFormProps {
   isLogin: boolean;
   toggleLoginSignup: () => void;
   toggleModal: () => void;
-  setError: (message: string) => void; // Add this prop for error handling
+  setError: (message: string) => void; 
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
   isLogin,
   toggleLoginSignup,
   toggleModal,
-  setError, // Use the passed function to set errors
+  setError, 
 }) => {
   const { loginWithEmail, signupWithEmail, loginWithGoogle } = useAuth();
   const [email, setEmail] = useState<string>('');
@@ -30,11 +30,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
       } else {
         await signupWithEmail(email, password);
       }
-      toggleModal(); // Close the modal after successful login/signup
+      toggleModal(); 
     } catch (error: any) {
-      // Capture and set a formatted error message
       const errorMessage = error.message || 'An error occurred. Please try again.';
-      setError(errorMessage); // Set error to be shown in the modal
+      setError(errorMessage); // 
     }
   };
 
