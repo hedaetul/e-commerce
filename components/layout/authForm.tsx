@@ -77,7 +77,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <p className='text-sm text-center'>
         {isLogin ? (
           <>
-            Don't have an account?{' '}
+            Don`t have an account?{' '}
             <button
               type='button'
               onClick={toggleLoginSignup}
