@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useCart } from '@/context/CartContext';
 import products from '@/data/product';
 import Image from 'next/image';
@@ -13,7 +14,7 @@ interface Product {
   description: string;
 }
 
-const HeroSection = () => {
+const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: Product) => {
@@ -48,7 +49,6 @@ const HeroSection = () => {
                 <p className='text-gray-500 text-sm mb-4 overflow-hidden whitespace-nowrap text-ellipsis'>
                   {product.description}
                 </p>
-
                 <button
                   className='flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300'
                   onClick={() => handleAddToCart(product)}
