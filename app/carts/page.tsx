@@ -1,10 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext'; 
+import { useCart } from '@/context/CartContext';
+import Image from 'next/image';
+import React from 'react';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import AppWrapper from '../AppWrapper';
-import Image from 'next/image';
 
 const Carts: React.FC = () => {
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
@@ -39,20 +40,23 @@ const Carts: React.FC = () => {
                   </div>
                 </div>
                 <div className='flex items-center'>
-                  <Button variant='outline'
+                  <Button
+                    variant='outline'
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className='mr-2'
                   >
                     -
                   </Button>
                   <span className='mx-2'>{item.quantity}</span>
-                  <Button variant='outline'
+                  <Button
+                    variant='outline'
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className='mr-2'
                   >
                     +
                   </Button>
-                  <Button variant='outline'
+                  <Button
+                    variant='outline'
                     onClick={() => removeFromCart(item.id)}
                     className='text-red-500'
                   >
