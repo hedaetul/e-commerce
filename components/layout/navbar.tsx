@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
           <div className='flex gap-3'>
             <span
               className='bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer'
-              onClick={handleOpenDialog} // Open the dialog on click
+              onClick={handleOpenDialog}
             >
               <FaRegUser className='text-lg' />
             </span>
@@ -80,13 +80,12 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Render AuthForm directly as a dialog */}
       {isDialogOpen && (
         <AuthForm
           isLogin={isLogin}
           toggleLoginSignup={toggleLoginSignup}
           setError={handleError}
-          onClose={handleCloseDialog} // Pass handleCloseDialog to AuthForm
+          onClose={handleCloseDialog}
         />
       )}
     </div>

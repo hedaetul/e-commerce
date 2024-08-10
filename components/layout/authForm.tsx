@@ -51,7 +51,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           </Dialog.Title>
           <button
             type='button'
-            className='absolute top-2 right-2 text-gray-600 hover:text-gray-900'
+            className='absolute top-3 right-3 hover:text-3xl text-2xl text-gray-700 hover:text-gray-900'
             onClick={onClose}
           >
             &times;
