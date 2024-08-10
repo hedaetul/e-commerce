@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from 'react-icons/fa';
 import { MdCategory, MdOutlineLocalGroceryStore } from 'react-icons/md';
-import CustomModal from './customModal';
 import AuthForm from './authForm';
 
 const links = [
@@ -16,13 +15,9 @@ const links = [
 ];
 
 const Navbar: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const toggleLoginSignup = () => {
     setIsLogin(!isLogin);
@@ -30,6 +25,14 @@ const Navbar: React.FC = () => {
 
   const handleError = (errorMessage: string) => {
     setError(errorMessage);
+  };
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   return (
@@ -48,7 +51,7 @@ const Navbar: React.FC = () => {
           <div className='flex gap-3'>
             <span
               className='bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer'
-              onClick={toggleModal}
+              onClick={handleOpenDialog} // Open the dialog on click
             >
               <FaRegUser className='text-lg' />
             </span>
@@ -77,14 +80,15 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
-      <CustomModal isOpen={isModalOpen} onClose={toggleModal} error={error}>
+      {/* Render AuthForm directly as a dialog */}
+      {isDialogOpen && (
         <AuthForm
           isLogin={isLogin}
           toggleLoginSignup={toggleLoginSignup}
-          toggleModal={toggleModal}
-          setError={handleError} // Pass handleError function to AuthForm
+          setError={handleError}
+          onClose={handleCloseDialog} // Pass handleCloseDialog to AuthForm
         />
-      </CustomModal>
+      )}
     </div>
   );
 };
