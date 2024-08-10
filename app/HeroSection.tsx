@@ -1,12 +1,12 @@
 'use client';
 
-import { useCart } from '@/context/CartContext'; // Ensure the path is correct
+import { useCart } from '@/context/CartContext';
 import products from '@/data/product';
 import Image from 'next/image';
 import { FaShoppingCart } from 'react-icons/fa';
 
 interface Product {
-  id: string; // Changed from number to string
+  id: string;
   name: string;
   photo: string;
   price: number;
