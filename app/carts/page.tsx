@@ -39,20 +39,20 @@ const Carts: React.FC = () => {
                   </div>
                 </div>
                 <div className='flex items-center'>
-                  <Button
+                  <Button variant='outline'
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className='mr-2'
                   >
                     -
                   </Button>
                   <span className='mx-2'>{item.quantity}</span>
-                  <Button
+                  <Button variant='outline'
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className='mr-2'
                   >
                     +
                   </Button>
-                  <Button
+                  <Button variant='outline'
                     onClick={() => removeFromCart(item.id)}
                     className='text-red-500'
                   >

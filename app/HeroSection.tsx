@@ -45,7 +45,7 @@ const HeroSection = () => {
                 <p className='text-gray-600 mb-2'>
                   ${product.price.toFixed(2)}
                 </p>
-                <p className='text-gray-500 text-sm mb-4'>
+                <p className='text-gray-500 text-sm mb-4 overflow-hidden whitespace-nowrap text-ellipsis'>
                   {product.description}
                 </p>
 
