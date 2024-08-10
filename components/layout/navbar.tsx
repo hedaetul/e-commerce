@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from 'react-icons/fa';
 import { MdCategory, MdOutlineLocalGroceryStore } from 'react-icons/md';
-import AuthForm from './authForm';
+import AuthForm from './authForm/authForm';
 
 const links = [
   { href: '#', text: 'Home' },

@@ -3,8 +3,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import Google from '@/dist/images/google.png';
 import Image from 'next/image';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 
@@ -42,8 +42,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
 
   return (
     <Dialog.Root open={true} onOpenChange={(open) => !open && onClose()}>
-      <Dialog.Overlay className='fixed inset-0 bg-black/30 z-50' />
-      <Dialog.Content className='fixed inset-0 flex items-center justify-center z-50'>
+      <Dialog.Overlay className='fixed inset-0 bg-black/30 z-50 opacity-0 transition-opacity duration-300 ease-in-out data-[state=open]:opacity-100' />
+      <Dialog.Content className='fixed inset-0 flex items-center justify-center z-50 transform translate-y-5 opacity-0 transition-transform duration-300 ease-in-out data-[state=open]:translate-y-0 data-[state=open]:opacity-100'>
         <div className='bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative'>
           <Dialog.Title className='text-xl font-bold mb-4'>
             {isLogin ? 'Login' : 'Sign Up'}

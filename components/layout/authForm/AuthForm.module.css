@@ -1,0 +1,23 @@
+/* AuthForm.module.css */
+.dialogOverlay {
+    @apply fixed inset-0 bg-black/30 z-50;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+  
+  .dialogOverlayOpen {
+    opacity: 1;
+  }
+  
+  .dialogContent {
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+  }
+  
+  .dialogContentOpen {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
