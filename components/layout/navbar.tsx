@@ -1,5 +1,7 @@
 'use client';
 
+import { useCart } from '@/context/CartContext'; 
+import Link from 'next/link'; 
 import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from 'react-icons/fa';
@@ -18,6 +20,13 @@ const Navbar: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Use the useCart hook to get the cart item count
+  const { cartItems } = useCart();
+  const cartItemCount = cartItems.reduce(
+    (count, item) => count + item.quantity,
+    0
+  );
 
   const toggleLoginSignup = () => {
     setIsLogin(!isLogin);
@@ -55,9 +64,18 @@ const Navbar: React.FC = () => {
             >
               <FaRegUser className='text-lg' />
             </span>
-            <span className='bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer'>
+            <Link
+              href='/carts'
+              className='relative bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center'
+            >
               <MdOutlineLocalGroceryStore className='text-lg' />
-            </span>
+              {/* Cart item count badge */}
+              {cartItemCount > 0 && (
+                <span className='absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
         <div className='h-[3.75rem] flex justify-between items-center'>
@@ -69,13 +87,13 @@ const Navbar: React.FC = () => {
           </div>
           <div className='flex gap-5'>
             {links.map((link) => (
-              <a
+              <Link
                 key={link.text}
                 href={link.href}
                 className='text-gray-600 hover:text-gray-900'
               >
                 {link.text}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,8 +1,25 @@
+'use client';
+
+import { useCart } from '@/context/CartContext'; // Ensure the path is correct
 import products from '@/data/product';
 import Image from 'next/image';
 import { FaShoppingCart } from 'react-icons/fa';
 
+interface Product {
+  id: string; // Changed from number to string
+  name: string;
+  photo: string;
+  price: number;
+  description: string;
+}
+
 const HeroSection = () => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({ ...product, quantity: 1 });
+  };
+
   return (
     <section className='py-12'>
       <div className='container mx-auto px-4'>
@@ -32,7 +49,10 @@ const HeroSection = () => {
                   {product.description}
                 </p>
 
-                <button className='flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300'>
+                <button
+                  className='flex items-center justify-center bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300'
+                  onClick={() => handleAddToCart(product)}
+                >
                   <FaShoppingCart className='mr-2' /> Add to Cart
                 </button>
               </div>

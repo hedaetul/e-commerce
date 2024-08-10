@@ -5,7 +5,7 @@ import NikeWindRunner from '@/dist/images/products/NikeWindRunner.png';
 import NikeWindRunner2 from '@/dist/images/products/NikeWindRunner2.jpg';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   description: string;
@@ -14,36 +14,36 @@ interface Product {
 
 const products: Product[] = [
   {
-    id: 1,
-    name: 'Hugo Boss Men Shirt Black ',
+    id: 'product-1',
+    name: 'Hugo Boss Men Shirt Black',
     price: 29.99,
     description: 'Description for Product 1',
     photo: HugoShirt,
   },
   {
-    id: 2,
-    name: 'Product 2',
+    id: 'product-2',
+    name: 'Nike Joggers',
     price: 39.99,
     description: '',
     photo: NikeJoggers,
   },
   {
-    id: 3,
-    name: 'Product 2',
+    id: 'product-3',
+    name: 'Nike WindRunner',
     price: 39.99,
     description: '',
     photo: NikeWindRunner,
   },
   {
-    id: 4,
-    name: 'Product 2',
+    id: 'product-4',
+    name: 'Nike Jacket',
     price: 39.99,
     description: '',
     photo: NikeJacket,
   },
   {
-    id: 5,
-    name: 'Product 2',
+    id: 'product-5',
+    name: 'Nike WindRunner 2',
     price: 39.99,
     description: '',
     photo: NikeWindRunner2,
