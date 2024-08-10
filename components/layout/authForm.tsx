@@ -1,12 +1,12 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
+import { useAuth } from '@/context/AuthContext';
 import Google from '@/dist/images/google.png';
+import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { useAuth } from '@/context/AuthContext';
-import { useState } from 'react';
 
 interface AuthFormProps {
   isLogin: boolean;
@@ -33,9 +33,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
       } else {
         await signupWithEmail(email, password);
       }
-      onClose(); // Close the dialog on successful login/signup
+      onClose();
     } catch (error: any) {
-      const errorMessage = error.message || 'An error occurred. Please try again.';
+      const errorMessage =
+        error.message || 'An error occurred. Please try again.';
       setError(errorMessage);
     }
   };
@@ -89,7 +90,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           <p className='text-sm text-center'>
             {isLogin ? (
               <>
-                Don’t have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <button
                   type='button'
                   onClick={toggleLoginSignup}
