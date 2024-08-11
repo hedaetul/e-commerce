@@ -1,8 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// Define the type for cart items
 interface CartItem {
   id: string;
   name: string;
@@ -11,49 +10,73 @@ interface CartItem {
   quantity: number;
 }
 
-// Define the type for the context
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   totalAmount: number;
+  subtotal: number;
+  shippingCharge: number;
+  tax: number;
+  discount: number;
+  updateSubtotal: (amount: number) => void;
+  updateShippingCharge: (amount: number) => void;
+  updateTax: (amount: number) => void;
+  updateDiscount: (amount: number) => void;
 }
 
-// Create the context
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    // Load cart items from local storage if available
     const savedCart = localStorage.getItem('cartItems');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  useEffect(() => {
-    // Save cart items to local storage whenever cartItems changes
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+  const [subtotal, setSubtotal] = useState<number>(() => {
+    const savedSubtotal = localStorage.getItem('subtotal');
+    return savedSubtotal ? parseFloat(savedSubtotal) : 100;
+  });
 
-  const calculateTotalAmount = () => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
+  const [shippingCharge, setShippingCharge] = useState<number>(() => {
+    const savedShippingCharge = localStorage.getItem('shippingCharge');
+    return savedShippingCharge ? parseFloat(savedShippingCharge) : 10;
+  });
+
+  const [tax, setTax] = useState<number>(() => {
+    const savedTax = localStorage.getItem('tax');
+    return savedTax ? parseFloat(savedTax) : 8;
+  });
+
+  const [discount, setDiscount] = useState<number>(() => {
+    const savedDiscount = localStorage.getItem('discount');
+    return savedDiscount ? parseFloat(savedDiscount) : 5;
+  });
+
+  const totalAmount = subtotal + shippingCharge + tax - discount;
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('subtotal', subtotal.toFixed(2));
+    localStorage.setItem('shippingCharge', shippingCharge.toFixed(2));
+    localStorage.setItem('tax', tax.toFixed(2));
+    localStorage.setItem('discount', discount.toFixed(2));
+    localStorage.setItem('totalAmount', totalAmount.toFixed(2));
+  }, [cartItems, subtotal, shippingCharge, tax, discount, totalAmount]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
-      const itemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
+      const itemIndex = prevItems.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
       if (itemIndex >= 0) {
-        // Update quantity if item already in cart
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
         return newItems;
       }
-      // Add new item to cart
       return [...prevItems, item];
     });
   };
@@ -70,6 +93,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const updateSubtotal = (amount: number) => {
+    setSubtotal(amount);
+  };
+
+  const updateShippingCharge = (amount: number) => {
+    setShippingCharge(amount);
+  };
+
+  const updateTax = (amount: number) => {
+    setTax(amount);
+  };
+
+  const updateDiscount = (amount: number) => {
+    setDiscount(amount);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -77,7 +116,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         addToCart,
         removeFromCart,
         updateQuantity,
-        totalAmount: calculateTotalAmount(),
+        totalAmount,
+        subtotal,
+        shippingCharge,
+        tax,
+        discount,
+        updateSubtotal,
+        updateShippingCharge,
+        updateTax,
+        updateDiscount,
       }}
     >
       {children}
@@ -85,7 +132,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Custom hook to use the cart context
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (context === undefined) {

@@ -21,7 +21,6 @@ const Navbar: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Use the useCart hook to get the cart item count
   const { cartItems } = useCart();
   const cartItemCount = cartItems.reduce(
     (count, item) => count + item.quantity,
