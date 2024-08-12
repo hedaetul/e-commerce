@@ -10,6 +10,16 @@ interface CartItem {
   quantity: number;
 }
 
+interface Address {
+  name: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
@@ -20,17 +30,21 @@ interface CartContextType {
   shippingCharge: number;
   tax: number;
   discount: number;
+  billingAddress: Address | null;
+  shippingAddress: Address | null;
+  selectedPaymentMethod: string;
   updateSubtotal: (amount: number) => void;
   updateShippingCharge: (amount: number) => void;
   updateTax: (amount: number) => void;
   updateDiscount: (amount: number) => void;
+  updateBillingAddress: (address: Address) => void;
+  updateShippingAddress: (address: Address) => void;
+  updateSelectedPaymentMethod: (method: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem('cartItems');
     return savedCart ? JSON.parse(savedCart) : [];
@@ -56,6 +70,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     return savedDiscount ? parseFloat(savedDiscount) : 5;
   });
 
+  const [billingAddress, setBillingAddress] = useState<Address | null>(() => {
+    const savedAddress = localStorage.getItem('billingAddress');
+    return savedAddress ? JSON.parse(savedAddress) : null;
+  });
+
+  const [shippingAddress, setShippingAddress] = useState<Address | null>(() => {
+    const savedAddress = localStorage.getItem('shippingAddress');
+    return savedAddress ? JSON.parse(savedAddress) : null;
+  });
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(() => {
+    const savedPaymentMethod = localStorage.getItem('selectedPaymentMethod');
+    return savedPaymentMethod ? savedPaymentMethod : 'credit-card';
+  });
+
   const totalAmount = subtotal + shippingCharge + tax - discount;
 
   useEffect(() => {
@@ -65,13 +94,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem('tax', tax.toFixed(2));
     localStorage.setItem('discount', discount.toFixed(2));
     localStorage.setItem('totalAmount', totalAmount.toFixed(2));
-  }, [cartItems, subtotal, shippingCharge, tax, discount, totalAmount]);
+    if (billingAddress) {
+      localStorage.setItem('billingAddress', JSON.stringify(billingAddress));
+    }
+    if (shippingAddress) {
+      localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
+    }
+    localStorage.setItem('selectedPaymentMethod', selectedPaymentMethod);
+  }, [cartItems, subtotal, shippingCharge, tax, discount, totalAmount, billingAddress, shippingAddress, selectedPaymentMethod]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
-      const itemIndex = prevItems.findIndex(
-        (cartItem) => cartItem.id === item.id
-      );
+      const itemIndex = prevItems.findIndex((cartItem) => cartItem.id === item.id);
       if (itemIndex >= 0) {
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
@@ -109,6 +143,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setDiscount(amount);
   };
 
+  const updateBillingAddress = (address: Address) => {
+    setBillingAddress(address);
+  };
+
+  const updateShippingAddress = (address: Address) => {
+    setShippingAddress(address);
+  };
+
+  const updateSelectedPaymentMethod = (method: string) => {
+    setSelectedPaymentMethod(method);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -121,10 +167,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         shippingCharge,
         tax,
         discount,
+        billingAddress,
+        shippingAddress,
+        selectedPaymentMethod,
         updateSubtotal,
         updateShippingCharge,
         updateTax,
         updateDiscount,
+        updateBillingAddress,
+        updateShippingAddress,
+        updateSelectedPaymentMethod,
       }}
     >
       {children}

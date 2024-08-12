@@ -1,21 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React from 'react';
 import { FaCashRegister, FaCcVisa, FaPaypal } from 'react-icons/fa';
+import { useCart } from '@/context/CartContext';
 
 interface PaymentMethodSectionProps {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
-  onSubmit,
-}) => {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState('credit-card');
+const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({ onSubmit }) => {
+  const { selectedPaymentMethod, updateSelectedPaymentMethod } = useCart();
 
   const handlePaymentMethodChange = (method: string) => {
-    setSelectedPaymentMethod(method);
+    updateSelectedPaymentMethod(method);
   };
 
   return (
@@ -26,9 +24,7 @@ const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
           <Button
             onClick={() => handlePaymentMethodChange('credit-card')}
             className={`flex-1 border rounded-lg py-2 flex items-center justify-center`}
-            variant={
-              selectedPaymentMethod === 'credit-card' ? 'default' : 'outline'
-            }
+            variant={selectedPaymentMethod === 'credit-card' ? 'default' : 'outline'}
           >
             <FaCcVisa className='mr-2' /> Pay with Credit Card
           </Button>
@@ -42,11 +38,7 @@ const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
           <Button
             onClick={() => handlePaymentMethodChange('cash-on-delivery')}
             className={`flex-1 border rounded-lg py-2 flex items-center justify-center`}
-            variant={
-              selectedPaymentMethod === 'cash-on-delivery'
-                ? 'default'
-                : 'outline'
-            }
+            variant={selectedPaymentMethod === 'cash-on-delivery' ? 'default' : 'outline'}
           >
             <FaCashRegister className='mr-2' /> Cash on Delivery
           </Button>
@@ -95,6 +87,7 @@ const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
                 variant='outline'
                 type='button'
                 className='w-1/2 py-2 px-4 rounded-lg'
+                onClick={() => window.history.back()}
               >
                 Back to Checkout Details
               </Button>
@@ -124,6 +117,7 @@ const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
                 variant='outline'
                 type='button'
                 className='w-1/2 py-2 px-4 rounded-lg'
+                onClick={() => window.history.back()}
               >
                 Back to Checkout Details
               </Button>
@@ -142,13 +136,14 @@ const PaymentMethodSection: React.FC<PaymentMethodSectionProps> = ({
                 type='button'
                 variant='outline'
                 className='w-1/2 py-2 px-4 rounded-lg'
+                onClick={() => window.history.back()}
               >
                 Back to Checkout Details
               </Button>
               <Button
                 type='button'
                 className='w-1/2 py-2 px-4 rounded-lg'
-                onClick={() => alert('Order Confirmed')}
+                onClick={onSubmit}
               >
                 Confirm Order
               </Button>
