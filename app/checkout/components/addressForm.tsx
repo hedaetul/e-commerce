@@ -21,7 +21,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
   title,
 }) => {
   return (
-    <div className='bg-white p-6 rounded-lg '>
+    <div className='bg-white p-6 rounded-lg'>
       <h1 className='text-2xl font-bold mb-6'>{title}</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
         <div className='flex flex-col gap-4'>

@@ -1,13 +1,23 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
 import AppWrapper from '../AppWrapper';
 import AddressForm from './components/addressForm';
 
 const Checkout: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [billingData, setBillingData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    zipCode: '',
+    address1: '',
+    email: '',
+    company: '',
+    country: '',
+    address2: '',
+  });
+  const [shippingData, setShippingData] = useState({
     fullName: '',
     phoneNumber: '',
     zipCode: '',
@@ -29,26 +39,41 @@ const Checkout: React.FC = () => {
   const total = subtotal + shippingCharge + tax - discount;
 
   useEffect(() => {
-    // Retrieve saved form data from localStorage on component mount
-    const savedFormData = localStorage.getItem('formData');
-    if (savedFormData) {
-      setFormData(JSON.parse(savedFormData));
+    const savedBillingData = localStorage.getItem('billingData');
+    if (savedBillingData) {
+      setBillingData(JSON.parse(savedBillingData));
+    }
+    const savedShippingData = localStorage.getItem('shippingData');
+    if (savedShippingData) {
+      setShippingData(JSON.parse(savedShippingData));
     }
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBillingInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
-    setFormData(updatedFormData);
-    // Save updated form data to localStorage
-    localStorage.setItem('formData', JSON.stringify(updatedFormData));
+    const updatedBillingData = { ...billingData, [name]: value };
+    setBillingData(updatedBillingData);
+    localStorage.setItem('billingData', JSON.stringify(updatedBillingData));
   };
 
-  const handleShippingAddressToggle = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setShowShippingAddress(!e.target.checked);
+  const handleShippingInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const updatedShippingData = { ...shippingData, [name]: value };
+    setShippingData(updatedShippingData);
+    localStorage.setItem('shippingData', JSON.stringify(updatedShippingData));
   };
+
+  const handleShippingAddressToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setShippingData(billingData); 
+    } else {
+      setShowShippingAddress(true);
+    }
+  };
+
+  console.log(billingData);
+console.log(shippingData);
+
 
   return (
     <AppWrapper>
@@ -56,8 +81,8 @@ const Checkout: React.FC = () => {
         <div className='md:col-span-2'>
           <div className='bg-white p-6 rounded-lg form-shadow mb-6'>
             <AddressForm
-              formData={formData}
-              handleInputChange={handleInputChange}
+              formData={billingData}
+              handleInputChange={handleBillingInputChange}
               title='Billing Address'
             />
           </div>
@@ -75,8 +100,8 @@ const Checkout: React.FC = () => {
             {showShippingAddress && (
               <div>
                 <AddressForm
-                  formData={formData}
-                  handleInputChange={handleInputChange}
+                  formData={shippingData}
+                  handleInputChange={handleShippingInputChange}
                   title='Shipping Address'
                 />
               </div>
