@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { auth } from '@/lib/firebase';
@@ -9,6 +9,7 @@ interface AuthContextProps {
   loginWithEmail: (email: string, password: string) => Promise<void>;
   signupWithEmail: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -39,11 +40,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await signInWithPopup(auth, provider);
   };
 
+  const logout = async () => {
+    await auth.signOut();
+  };
+
   const values: AuthContextProps = {
     user,
     loginWithEmail,
     signupWithEmail,
     loginWithGoogle,
+    logout,
   };
 
   return <AuthContext.Provider value={values}>{!loading && children}</AuthContext.Provider>;

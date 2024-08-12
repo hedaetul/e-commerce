@@ -2,17 +2,34 @@
 
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
-import React from 'react';
+import React, { useState } from 'react';
 import AppWrapper from '../AppWrapper';
 import PaymentMethodSection from './components/paymentMethod';
+import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
+import AuthForm from '@/components/layout/authForm';
 
 const PaymentPage: React.FC = () => {
   const { totalAmount, subtotal, shippingCharge, tax, discount } = useCart();
+  const { user } = useAuth();
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
+  const handleAuthClose = () => {
+    setShowAuthForm(false);
+    setErrorMessage('');
+  };
+
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      setShowAuthForm(true);
+      return;
+    }
     // Handle payment submission logic here
-    alert('Payment submitted');
+    // Redirect to confirmation page after successful payment
+    window.location.href = '/confirmation';
   };
 
   return (
@@ -48,6 +65,15 @@ const PaymentPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {showAuthForm && (
+        <AuthForm
+          isLogin={isLogin}
+          toggleLoginSignup={() => setIsLogin(!isLogin)}
+          setError={setErrorMessage}
+          onClose={handleAuthClose}
+        />
+      )}
     </AppWrapper>
   );
 };
