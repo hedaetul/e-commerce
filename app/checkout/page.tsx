@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppWrapper from '../AppWrapper';
 import AddressForm from './components/addressForm';
 
@@ -19,7 +19,7 @@ const Checkout: React.FC = () => {
   });
   const [showShippingAddress, setShowShippingAddress] = useState(true);
   const [subtotal, setSubtotal] = useState(() => {
-    const savedSubtotal = localStorage.getItem('totalAmount');
+    const savedSubtotal = localStorage.getItem('subtotal');
     return savedSubtotal ? parseFloat(savedSubtotal) : 100;
   });
   const [shippingCharge, setShippingCharge] = useState(10);
@@ -28,12 +28,20 @@ const Checkout: React.FC = () => {
 
   const total = subtotal + shippingCharge + tax - discount;
 
+  useEffect(() => {
+    // Retrieve saved form data from localStorage on component mount
+    const savedFormData = localStorage.getItem('formData');
+    if (savedFormData) {
+      setFormData(JSON.parse(savedFormData));
+    }
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    // Save updated form data to localStorage
+    localStorage.setItem('formData', JSON.stringify(updatedFormData));
   };
 
   const handleShippingAddressToggle = (

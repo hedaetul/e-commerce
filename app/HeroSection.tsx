@@ -14,6 +14,8 @@ interface Product {
   price: number;
   description: string;
 }
+console.log(localStorage);
+
 
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
