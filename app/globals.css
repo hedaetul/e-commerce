@@ -80,7 +80,7 @@
     @apply h-12 w-12 cursor-pointer text-black;
   }
   .icon-7 {
-    @apply h-7 w-7 cursor-pointer text-red-500 font-extrabold text-3xl italic;
+    @apply cursor-pointer text-red-500 font-extrabold text-3xl italic;
   }
   .icon-5 {
     @apply h-5 w-5 cursor-pointer;
