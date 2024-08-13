@@ -1,6 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { firestore } from '@/lib/firebase';
+import { doc, setDoc, Timestamp } from 'firebase/firestore';
+import { auth } from '@/lib/firebase';
 
 interface CartItem {
   id: string;
@@ -40,6 +43,8 @@ interface CartContextType {
   updateBillingAddress: (address: Address) => void;
   updateShippingAddress: (address: Address) => void;
   updateSelectedPaymentMethod: (method: string) => void;
+  clearCart: () => void; // Added method to clear cart
+  saveOrder: () => Promise<void>; // Added method to save order
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -155,6 +160,48 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSelectedPaymentMethod(method);
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cartItems');
+  };
+
+  const saveOrder = async () => {
+    if (!auth.currentUser) {
+      throw new Error('User must be logged in to place an order');
+    }
+
+    const orderId = new Date().toISOString(); // Generate a unique order ID
+    const userId = auth.currentUser.uid;
+
+    // Create order data
+    const orderData = {
+      orderId,
+      date: Timestamp.now(),
+      subtotal,
+      shippingCharge,
+      tax,
+      discount,
+      totalAmount,
+      billingAddress,
+      shippingAddress,
+      paymentMethod: selectedPaymentMethod,
+      items: cartItems.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      // Save order to Firestore
+      await setDoc(doc(firestore, 'users', userId, 'orders', orderId), orderData);
+    } catch (error) {
+      console.error('Error saving order to Firestore:', error);
+      throw new Error('Error saving order to Firestore');
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -177,6 +224,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateBillingAddress,
         updateShippingAddress,
         updateSelectedPaymentMethod,
+        clearCart,
+        saveOrder,
       }}
     >
       {children}

@@ -1,16 +1,10 @@
+// AddressForm.tsx
+
 import React from 'react';
+import { AddressData } from '@/types/addressTypes'; // Adjust import path as needed
 
 interface AddressFormProps {
-  formData: {
-    fullName: string;
-    phoneNumber: string;
-    zipCode: string;
-    address1: string;
-    email: string;
-    company: string;
-    country: string;
-    address2: string;
-  };
+  formData: AddressData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   title: string;
 }
@@ -36,6 +30,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
               value={formData.fullName}
               onChange={handleInputChange}
               className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              aria-required='true'
             />
           </div>
           <div className='flex flex-col'>
@@ -49,6 +44,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
               value={formData.phoneNumber}
               onChange={handleInputChange}
               className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              aria-required='true'
             />
           </div>
           <div className='flex flex-col'>
@@ -62,6 +58,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
               value={formData.zipCode}
               onChange={handleInputChange}
               className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              aria-required='true'
             />
           </div>
           <div className='flex flex-col'>
@@ -75,6 +72,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
               value={formData.address1}
               onChange={handleInputChange}
               className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              aria-required='true'
             />
           </div>
         </div>
@@ -90,6 +88,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
               value={formData.email}
               onChange={handleInputChange}
               className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              aria-required='true'
             />
           </div>
           <div className='flex flex-col'>

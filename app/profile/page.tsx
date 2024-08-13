@@ -1,13 +1,16 @@
 // src/pages/profile.tsx
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter for redirection
 import AppWrapper from '../AppWrapper';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter(); // Initialize useRouter
 
   if (!user) {
     return <p>Loading...</p>; // Handle the loading state or redirect to login page
@@ -21,6 +24,15 @@ const ProfilePage: React.FC = () => {
     { id: '67890', date: '2024-07-15', total: 49.99, status: 'Delivered' },
     { id: '54321', date: '2024-06-10', total: 19.99, status: 'Pending' },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/'); // Redirect to home page after logout
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
 
   return (
     <AppWrapper>
@@ -38,13 +50,18 @@ const ProfilePage: React.FC = () => {
               />
             </div>
             <div>
-              <h1 className='text-3xl font-semibold mb-2'>{displayName || 'User'}</h1>
+              <h1 className='text-3xl font-semibold mb-2'>
+                {displayName || 'User'}
+              </h1>
               <p className='text-gray-600'>{email}</p>
               <div className='mt-4'>
                 <Link href='/edit-profile'>
-                  <div className='text-blue-500 hover:underline cursor-pointer'>Edit Profile</div>
+                  <div className='text-blue-500 hover:underline cursor-pointer'>
+                    Edit Profile
+                  </div>
                 </Link>
               </div>
+              <Button onClick={handleLogout}>Logout</Button>
             </div>
           </div>
         </div>
@@ -55,7 +72,10 @@ const ProfilePage: React.FC = () => {
           <div className='space-y-4'>
             {orders.length > 0 ? (
               orders.map((order) => (
-                <div key={order.id} className='border border-gray-200 rounded-lg p-4'>
+                <div
+                  key={order.id}
+                  className='border border-gray-200 rounded-lg p-4'
+                >
                   <div className='flex justify-between mb-2'>
                     <span className='font-medium'>Order ID:</span>
                     <span>{order.id}</span>
@@ -70,7 +90,15 @@ const ProfilePage: React.FC = () => {
                   </div>
                   <div className='flex justify-between'>
                     <span className='font-medium'>Status:</span>
-                    <span className={`font-medium ${order.status === 'Shipped' ? 'text-green-500' : order.status === 'Delivered' ? 'text-blue-500' : 'text-yellow-500'}`}>
+                    <span
+                      className={`font-medium ${
+                        order.status === 'Shipped'
+                          ? 'text-green-500'
+                          : order.status === 'Delivered'
+                          ? 'text-blue-500'
+                          : 'text-yellow-500'
+                      }`}
+                    >
                       {order.status}
                     </span>
                   </div>
