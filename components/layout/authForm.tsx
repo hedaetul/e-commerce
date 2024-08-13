@@ -1,10 +1,10 @@
 'use client';
 
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Google from '@/dist/images/google.png';
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
-import { useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -33,7 +33,18 @@ const AuthForm: React.FC<AuthFormProps> = ({
       } else {
         await signupWithEmail(email, password);
       }
-      onClose();
+      onClose(); // Close the dialog on successful login/signup
+    } catch (error: any) {
+      const errorMessage =
+        error.message || 'An error occurred. Please try again.';
+      setError(errorMessage);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      onClose(); // Close the dialog on successful Google login
     } catch (error: any) {
       const errorMessage =
         error.message || 'An error occurred. Please try again.';
@@ -70,6 +81,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 className='w-full'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -82,6 +94,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
                 className='w-full'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
             <Button
@@ -93,7 +106,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           </form>
           <Button
             className='w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md flex items-center justify-center mt-4'
-            onClick={loginWithGoogle}
+            onClick={handleGoogleLogin} // Updated function call
           >
             <span className='bg-white rounded-full p-2 mr-2 flex items-center justify-center'>
               <Image src={Google} alt='Google Logo' width={16} height={16} />
