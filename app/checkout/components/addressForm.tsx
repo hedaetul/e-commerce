@@ -1,137 +1,263 @@
-// AddressForm.tsx
-
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useCart } from '@/context/CartContext';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { doc, setDoc, Timestamp } from 'firebase/firestore';
 import React from 'react';
-import { AddressData } from '@/types/addressTypes'; // Adjust import path as needed
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import { auth, firestore } from '@/lib/firebase';
 
 interface AddressFormProps {
-  formData: AddressData;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   title: string;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({
-  formData,
-  handleInputChange,
-  title,
-}) => {
+const AddressForm: React.FC<AddressFormProps> = ({ title }) => {
+  const FormSchema = z.object({
+    fullName: z.string().min(1, 'Full Name is required'),
+    phoneNumber: z.string().min(1, 'Phone Number is required'),
+    zipCode: z.string(),
+    address1: z.string().min(1, 'Address 1 is required'),
+    email: z.string().email('Invalid email address'),
+    company: z.string().optional(),
+    country: z.string().min(1, 'Country name is required'),
+    address2: z.string().optional(),
+  });
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      fullName: '',
+      phoneNumber: '',
+      zipCode: '',
+      address1: '',
+      email: '',
+      company: '',
+      country: '',
+      address2: '',
+    },
+  });
+
+  const { handleSubmit, control, formState } = form;
+  const { cartItems, clearCart, subtotal, shippingCharge, tax, discount, totalAmount } = useCart();
+  const router = useRouter();
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    if (!auth.currentUser) {
+      // Handle user not authenticated case
+      console.error('User is not authenticated');
+      return;
+    }
+
+    const orderId = new Date().toISOString(); 
+    const userId = auth.currentUser.uid;
+
+    const orderData = {
+      orderId,
+      date: Timestamp.now(),
+      subtotal,
+      shippingCharge,
+      tax,
+      discount,
+      totalAmount,
+      billingAddress: data,
+      shippingAddress: data, 
+      paymentMethod: 'Credit Card', 
+      items: cartItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      await setDoc(
+        doc(firestore, 'users', userId, 'orders', orderId),
+        orderData
+      );
+
+      localStorage.removeItem('cart');
+      localStorage.removeItem('billingData');
+      localStorage.removeItem('shippingData');
+      clearCart();
+
+      router.push('/confirmation');
+    } catch (error) {
+      console.error('Error saving order to Firestore:', error);
+    }
+  };
+
   return (
     <div className='bg-white p-6 rounded-lg'>
       <h1 className='text-2xl font-bold mb-6'>{title}</h1>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div className='flex flex-col gap-4'>
-          <div className='flex flex-col'>
-            <label htmlFor='fullName' className='mb-1 font-medium'>
-              Full Name
-            </label>
-            <input
-              id='fullName'
-              type='text'
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='flex flex-col gap-4'>
+            <FormField
+              control={control}
               name='fullName'
-              value={formData.fullName}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
-              aria-required='true'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='fullName'
+                      type='text'
+                      placeholder='Enter your Full name'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.fullName?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='phoneNumber' className='mb-1 font-medium'>
-              Phone Number
-            </label>
-            <input
-              id='phoneNumber'
-              type='text'
+            <FormField
+              control={control}
               name='phoneNumber'
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
-              aria-required='true'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='phoneNumber'
+                      type='text'
+                      placeholder='Enter your Phone Number'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.phoneNumber?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='zipCode' className='mb-1 font-medium'>
-              Zip Code
-            </label>
-            <input
-              id='zipCode'
-              type='text'
+            <FormField
+              control={control}
               name='zipCode'
-              value={formData.zipCode}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
-              aria-required='true'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Zip Code</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='zipCode'
+                      type='text'
+                      placeholder='Enter your zip code'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.zipCode?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='address1' className='mb-1 font-medium'>
-              Address 1
-            </label>
-            <input
-              id='address1'
-              type='text'
+            <FormField
+              control={control}
               name='address1'
-              value={formData.address1}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
-              aria-required='true'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address 1</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='address1'
+                      type='text'
+                      placeholder='Enter your Address-1'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.address1?.message}</FormMessage>
+                </FormItem>
+              )}
             />
           </div>
-        </div>
-        <div className='flex flex-col gap-4'>
-          <div className='flex flex-col'>
-            <label htmlFor='email' className='mb-1 font-medium'>
-              Email
-            </label>
-            <input
-              id='email'
-              type='email'
+          <div className='flex flex-col gap-4'>
+            <FormField
+              control={control}
               name='email'
-              value={formData.email}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
-              aria-required='true'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='email'
+                      type='text'
+                      placeholder='Enter your email address'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.email?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='company' className='mb-1 font-medium'>
-              Company
-            </label>
-            <input
-              id='company'
-              type='text'
+            <FormField
+              control={control}
               name='company'
-              value={formData.company}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='company'
+                      type='text'
+                      placeholder='Enter your company name'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.company?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='country' className='mb-1 font-medium'>
-              Country
-            </label>
-            <input
-              id='country'
-              type='text'
+            <FormField
+              control={control}
               name='country'
-              value={formData.country}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='country'
+                      type='text'
+                      placeholder='Enter your country name'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.country?.message}</FormMessage>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className='flex flex-col'>
-            <label htmlFor='address2' className='mb-1 font-medium'>
-              Address 2
-            </label>
-            <input
-              id='address2'
-              type='text'
+            <FormField
+              control={control}
               name='address2'
-              value={formData.address2}
-              onChange={handleInputChange}
-              className='p-2 border border-gray-200 rounded-sm hover:border-gray-400 focus:border-red-400 focus:outline-none'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address 2</FormLabel>
+                  <FormControl>
+                    <Input
+                      id='address2'
+                      type='text'
+                      placeholder='Enter your Address-2'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage>{formState.errors.address2?.message}</FormMessage>
+                </FormItem>
+              )}
             />
+            <Button
+              type='submit'
+              className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md'
+            >
+              Confirm Order
+            </Button>
           </div>
-        </div>
-      </div>
+        </form>
+      </Form>
     </div>
   );
 };

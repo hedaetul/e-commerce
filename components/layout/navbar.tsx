@@ -1,13 +1,14 @@
 'use client';
 
+import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaRegUser } from 'react-icons/fa';
 import { MdCategory, MdOutlineLocalGroceryStore } from 'react-icons/md';
 import AuthForm from './authForm';
-import { useAuth } from '@/context/AuthContext'; // Import the useAuth hook
 
 const links = [
   { href: '#', text: 'Home' },
@@ -21,14 +22,12 @@ const Navbar: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
   const { cartItems } = useCart();
-  const cartItemCount = cartItems.reduce(
-    (count, item) => count + item.quantity,
-    0
-  );
+  const cartItemCount = cartItems.length;
 
-  const { user } = useAuth(); // Use the useAuth hook
+  const { user } = useAuth();
 
   const toggleLoginSignup = () => {
     setIsLogin(!isLogin);
@@ -48,10 +47,8 @@ const Navbar: React.FC = () => {
 
   const handleUserIconClick = () => {
     if (user) {
-      // If user is logged in, redirect to the profile page
-      window.location.href = '/profile';
+      router.push('/profile');
     } else {
-      // If user is not logged in, open the AuthForm dialog
       handleOpenDialog();
     }
   };
@@ -60,7 +57,9 @@ const Navbar: React.FC = () => {
     <div className='w-screen shadow-lg'>
       <div className='container flex flex-col justify-between'>
         <div className='h-[5rem] flex justify-between items-center'>
-          <h1 className='icon-7'>Bajar</h1>
+          <Link href='/' className='icon-7'>
+            Bajar
+          </Link>
           <div className='relative w-[660px]'>
             <AiOutlineSearch className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg' />
             <input
@@ -72,7 +71,7 @@ const Navbar: React.FC = () => {
           <div className='flex gap-3'>
             <span
               className='bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer'
-              onClick={handleUserIconClick} // Update click handler
+              onClick={handleUserIconClick}
             >
               <FaRegUser className='text-lg' />
             </span>
@@ -81,7 +80,6 @@ const Navbar: React.FC = () => {
               className='relative bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center'
             >
               <MdOutlineLocalGroceryStore className='text-lg' />
-              {/* Cart item count badge */}
               {cartItemCount > 0 && (
                 <span className='absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>
                   {cartItemCount}

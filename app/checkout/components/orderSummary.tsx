@@ -1,5 +1,5 @@
+import { OrderSummaryProps } from '@/types/orderTypes';
 import React from 'react';
-import { OrderSummaryProps } from '@/types/orderTypes'; // Import the types
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
   subtotal,

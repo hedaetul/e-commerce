@@ -1,9 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { firestore } from '@/lib/firebase';
+import { auth, firestore } from '@/lib/firebase';
 import { doc, setDoc, Timestamp } from 'firebase/firestore';
-import { auth } from '@/lib/firebase';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface CartItem {
   id: string;
@@ -43,13 +42,15 @@ interface CartContextType {
   updateBillingAddress: (address: Address) => void;
   updateShippingAddress: (address: Address) => void;
   updateSelectedPaymentMethod: (method: string) => void;
-  clearCart: () => void; // Added method to clear cart
-  saveOrder: () => Promise<void>; // Added method to save order
+  clearCart: () => void;
+  saveOrder: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem('cartItems');
     return savedCart ? JSON.parse(savedCart) : [];
@@ -85,10 +86,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return savedAddress ? JSON.parse(savedAddress) : null;
   });
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(() => {
-    const savedPaymentMethod = localStorage.getItem('selectedPaymentMethod');
-    return savedPaymentMethod ? savedPaymentMethod : 'credit-card';
-  });
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    () => {
+      const savedPaymentMethod = localStorage.getItem('selectedPaymentMethod');
+      return savedPaymentMethod ? savedPaymentMethod : 'credit-card';
+    }
+  );
 
   const totalAmount = subtotal + shippingCharge + tax - discount;
 
@@ -106,11 +109,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('shippingAddress', JSON.stringify(shippingAddress));
     }
     localStorage.setItem('selectedPaymentMethod', selectedPaymentMethod);
-  }, [cartItems, subtotal, shippingCharge, tax, discount, totalAmount, billingAddress, shippingAddress, selectedPaymentMethod]);
+  }, [
+    cartItems,
+    subtotal,
+    shippingCharge,
+    tax,
+    discount,
+    totalAmount,
+    billingAddress,
+    shippingAddress,
+    selectedPaymentMethod,
+  ]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
-      const itemIndex = prevItems.findIndex((cartItem) => cartItem.id === item.id);
+      const itemIndex = prevItems.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
       if (itemIndex >= 0) {
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
@@ -170,10 +185,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('User must be logged in to place an order');
     }
 
-    const orderId = new Date().toISOString(); // Generate a unique order ID
+    const orderId = new Date().toISOString();
     const userId = auth.currentUser.uid;
 
-    // Create order data
     const orderData = {
       orderId,
       date: Timestamp.now(),
@@ -185,7 +199,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       billingAddress,
       shippingAddress,
       paymentMethod: selectedPaymentMethod,
-      items: cartItems.map(item => ({
+      items: cartItems.map((item) => ({
         id: item.id,
         name: item.name,
         price: item.price,
@@ -194,8 +208,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     try {
-      // Save order to Firestore
-      await setDoc(doc(firestore, 'users', userId, 'orders', orderId), orderData);
+      await setDoc(
+        doc(firestore, 'users', userId, 'orders', orderId),
+        orderData
+      );
     } catch (error) {
       console.error('Error saving order to Firestore:', error);
       throw new Error('Error saving order to Firestore');
