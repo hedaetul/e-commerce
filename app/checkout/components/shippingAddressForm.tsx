@@ -1,8 +1,5 @@
-// ShippingAddressForm.tsx
-
-import React from 'react';
+import { AddressData } from '@/types/addressTypes';
 import AddressForm from './addressForm';
-import { AddressData } from '@/types/addressTypes'; 
 
 interface ShippingAddressFormProps {
   shippingData: AddressData;
@@ -12,29 +9,30 @@ interface ShippingAddressFormProps {
 }
 
 const ShippingAddressForm: React.FC<ShippingAddressFormProps> = ({
-  shippingData,
-  handleShippingInputChange,
   showShippingAddress,
   handleShippingAddressToggle,
-}) => (
-  <div className='bg-white p-6 rounded-lg form-shadow mb-6'>
-    <label htmlFor='sameAsBilling' className='flex items-center mb-4'>
-      <input
-        id='sameAsBilling'
-        type='checkbox'
-        onChange={handleShippingAddressToggle}
-        className='mr-2'
-      />
-      <span>Shipping address is the same as billing address</span>
-    </label>
-    {showShippingAddress && (
-      <AddressForm
-        formData={shippingData}
-        handleInputChange={handleShippingInputChange}
-        title='Shipping Address'
-      />
-    )}
-  </div>
-);
+}) => {
+  return (
+    <div>
+      <div className='flex items-center mb-4'>
+        <input
+          type='checkbox'
+          checked={!showShippingAddress}
+          onChange={handleShippingAddressToggle}
+          id='sameAsBilling'
+          className='mr-2'
+        />
+        <label htmlFor='sameAsBilling' className='text-sm'>
+          Shipping address is the same as billing address
+        </label>
+      </div>
+      {showShippingAddress && (
+        <AddressForm
+          title='Shipping Address'
+        />
+      )}
+    </div>
+  );
+};
 
 export default ShippingAddressForm;

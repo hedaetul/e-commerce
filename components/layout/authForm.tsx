@@ -1,11 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Google from '@/dist/images/google.png';
+import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button } from '../ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form'; // Adjust path as needed
 import { Input } from '../ui/input';
 
 interface AuthFormProps {
@@ -22,16 +32,31 @@ const AuthForm: React.FC<AuthFormProps> = ({
   onClose,
 }) => {
   const { loginWithEmail, signupWithEmail, loginWithGoogle } = useAuth();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const FormSchema = z.object({
+    email: z.string().min(1, 'Email is required').email('Invalid Email'),
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(6, 'Password must have at least 6 characters'),
+  });
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const { handleSubmit, control, formState } = form;
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       if (isLogin) {
-        await loginWithEmail(email, password);
+        await loginWithEmail(data.email, data.password);
       } else {
-        await signupWithEmail(email, password);
+        await signupWithEmail(data.email, data.password);
       }
       onClose(); // Close the dialog on successful login/signup
     } catch (error: any) {
@@ -70,43 +95,57 @@ const AuthForm: React.FC<AuthFormProps> = ({
           >
             &times;
           </button>
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <label htmlFor='email' className='block text-gray-700 mb-2'>
-                Email Address
-              </label>
-              <Input
-                id='email'
-                type='email'
-                className='w-full'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+          <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+              <FormField
+                control={control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='email'
+                        type='text'
+                        placeholder='Your email'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage>{formState.errors.email?.message}</FormMessage>
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <label htmlFor='password' className='block text-gray-700 mb-2'>
-                Password
-              </label>
-              <Input
-                id='password'
-                type='password'
-                className='w-full'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+              <FormField
+                control={control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id='password'
+                        type='password'
+                        placeholder='Your password'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage>
+                      {formState.errors.password?.message}
+                    </FormMessage>
+                  </FormItem>
+                )}
               />
-            </div>
-            <Button
-              type='submit'
-              className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md'
-            >
-              {isLogin ? 'Log In' : 'Sign Up'}
-            </Button>
-          </form>
+              <Button
+                type='submit'
+                className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md'
+              >
+                {isLogin ? 'Log In' : 'Sign Up'}
+              </Button>
+            </form>
+          </Form>
           <Button
             className='w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg shadow-md flex items-center justify-center mt-4'
-            onClick={handleGoogleLogin} // Updated function call
+            onClick={handleGoogleLogin}
           >
             <span className='bg-white rounded-full p-2 mr-2 flex items-center justify-center'>
               <Image src={Google} alt='Google Logo' width={16} height={16} />

@@ -14,7 +14,7 @@ import OrderSummary from './components/orderSummary';
 
 const Checkout: React.FC = () => {
   const router = useRouter();
-  const { cartItems, clearCart } = useCart(); // Get cart items and clear function from CartContext
+  const { cartItems, clearCart } = useCart(); 
   const [billingData, setBillingData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -86,14 +86,12 @@ const Checkout: React.FC = () => {
 
   const handleConfirmOrder = async () => {
     if (!auth.currentUser) {
-      // Handle user not authenticated case
       return;
     }
 
-    const orderId = new Date().toISOString(); // Generate a unique order ID
+    const orderId = new Date().toISOString(); 
     const userId = auth.currentUser.uid;
 
-    // Create order data
     const orderData = {
       orderId,
       date: Timestamp.now(),
@@ -104,7 +102,7 @@ const Checkout: React.FC = () => {
       totalAmount: total,
       billingAddress: billingData,
       shippingAddress: showShippingAddress ? billingData : shippingData,
-      paymentMethod: 'Credit Card', // Or whichever payment method the user selected
+      paymentMethod: 'Credit Card', 
       items: cartItems.map((item) => ({
         id: item.id,
         name: item.name,
@@ -114,30 +112,26 @@ const Checkout: React.FC = () => {
     };
 
     try {
-      // Save order to Firestore
       await setDoc(
         doc(firestore, 'users', userId, 'orders', orderId),
         orderData
       );
 
-      // Clear local storage and cart
       localStorage.removeItem('cart');
       localStorage.removeItem('billingData');
       localStorage.removeItem('shippingData');
       clearCart();
 
-      // Redirect to confirmation page
       router.push('/confirmation');
     } catch (error) {
       console.error('Error saving order to Firestore:', error);
-      // Handle error (e.g., show a notification to the user)
     }
   };
 
   return (
     <AppWrapper>
       <div className='container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8'>
-        <div className='md:col-span-2'>
+        <form className='md:col-span-2' onSubmit={handleConfirmOrder}>
           <BillingAddressForm
             billingData={billingData}
             handleBillingInputChange={handleBillingInputChange}
@@ -148,7 +142,7 @@ const Checkout: React.FC = () => {
             showShippingAddress={showShippingAddress}
             handleShippingAddressToggle={handleShippingAddressToggle}
           />
-        </div>
+        </form>
 
         <OrderSummary
           subtotal={subtotal}
@@ -162,7 +156,7 @@ const Checkout: React.FC = () => {
           <Link href='/carts'>
             <Button variant='outline'>Back to Cart</Button>
           </Link>
-          <Button onClick={handleConfirmOrder}>Confirm Order</Button>
+          <Button type='submit' onClick={handleConfirmOrder}>Place Order</Button>
         </div>
       </div>
     </AppWrapper>

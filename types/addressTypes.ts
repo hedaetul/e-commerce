@@ -4,7 +4,7 @@ export interface AddressData {
   zipCode: string;
   address1: string;
   email: string;
-  company: string;
-  country: string;
-  address2: string;
+  company?: string;
+  country?: string;
+  address2?: string;
 }
