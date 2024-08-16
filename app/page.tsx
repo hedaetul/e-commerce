@@ -1,5 +1,5 @@
-import AppWrapper from './AppWrapper';
-import HeroSection from './HeroSection';
+import AppWrapper from "./AppWrapper";
+import HeroSection from "./HeroSection";
 
 const Home = () => {
   return (

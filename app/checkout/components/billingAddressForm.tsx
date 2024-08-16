@@ -1,13 +1,11 @@
-import { AddressData } from '@/types/addressTypes';
-import AddressForm from './addressForm';
+import AddressForm from "./addressFormx";
 
 interface BillingAddressFormProps {
-  billingData: AddressData;
   handleBillingInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const BillingAddressForm: React.FC<BillingAddressFormProps> = ({}) => {
-  return <AddressForm title='Billing Address' />;
+  return <AddressForm title="Billing Address" />;
 };
 
 export default BillingAddressForm;

@@ -80,32 +80,36 @@
     @apply h-12 w-12 cursor-pointer text-black;
   }
   .icon-7 {
-    @apply cursor-pointer text-red-500 font-extrabold text-3xl italic;
+    @apply cursor-pointer text-3xl font-extrabold italic text-red-500;
   }
   .icon-5 {
     @apply h-5 w-5 cursor-pointer;
   }
   .container {
-    @apply mx-auto w-full max-w-7xl px-5 md:px-10  2xl:px-0;
+    @apply mx-auto w-full max-w-7xl px-5 md:px-10 2xl:px-0;
   }
 
   .form-shadow {
-    box-shadow: 0 2px 4px rgba(200, 200, 200, 0.2),
-      0 -1px 2px rgba(200, 200, 200, 0.15), 2px 0 4px rgba(200, 200, 200, 0.2),
+    box-shadow:
+      0 2px 4px rgba(200, 200, 200, 0.2),
+      0 -1px 2px rgba(200, 200, 200, 0.15),
+      2px 0 4px rgba(200, 200, 200, 0.2),
       -2px 0 4px rgba(200, 200, 200, 0.2);
   }
 
   .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-all;
+    @apply rounded-lg px-4 py-2 font-medium transition-all;
   }
 
   .btn-outline {
-    @apply border-2 border-red-500 text-red-500 bg-transparent;
+    @apply border-2 border-red-500 bg-transparent text-red-500;
   }
 
   .btn-outline:hover {
     @apply bg-red-500 text-white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(255, 0, 0, 0.2);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 0 0 2px rgba(255, 0, 0, 0.2);
   }
 
   .btn-contained {

@@ -1,31 +1,42 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import AppWrapper from '../AppWrapper';
+import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { useCart } from "@/context/CartContext";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
+import AppWrapper from "../AppWrapper";
 
 const Carts: React.FC = () => {
   const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
   const router = useRouter();
-  const [note, setNote] = useState('');
-  const [voucher, setVoucher] = useState('');
+  const [note, setNote] = useState("");
+  const [voucher, setVoucher] = useState("");
 
   const handleApplyVoucher = () => {
     // Implement voucher application logic
   };
 
+  const { toast } = useToast();
   const handleCheckout = () => {
-    router.push('/checkout');
+    if (cartItems.length > 0) {
+      router.push("/checkout");
+    } else {
+      toast({
+        title: "The cart is empty",
+        description: "You have no item in cart",
+        className: "bg-rose-600 text-white",
+      });
+    }
   };
 
   return (
     <AppWrapper>
-      <div className='container mx-auto px-4 py-8 flex'>
-        <div className='w-2/3 pr-4'>
+      <div className="container mx-auto flex px-4 py-8">
+        <div className="w-2/3 pr-4">
           {cartItems.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
@@ -33,83 +44,81 @@ const Carts: React.FC = () => {
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className='flex justify-between items-center mb-4 p-4 border border-gray-200 rounded-lg'
+                  className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-4"
                 >
-                  <div className='flex items-center'>
+                  <div className="flex items-center">
                     <Image
                       src={item.photo}
                       alt={item.name}
-                      className='w-16 h-16 object-cover mr-4'
+                      className="mr-4 h-16 w-16 object-cover"
                     />
                     <div>
-                      <h2 className='text-lg font-semibold'>{item.name}</h2>
-                      <p className='text-gray-600'>${item.price.toFixed(2)}</p>
+                      <h2 className="text-lg font-semibold">{item.name}</h2>
+                      <p className="text-gray-600">${item.price.toFixed(2)}</p>
                     </div>
                   </div>
-                  <div className='flex items-center'>
+                  <div className="flex items-center">
                     <Button
-                      variant='outline'
+                      variant="outline"
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className='mr-2'
+                      className="mr-2"
                     >
                       -
                     </Button>
-                    <span className='mx-2'>{item.quantity}</span>
+                    <span className="mx-2">{item.quantity}</span>
                     <Button
-                      variant='outline'
+                      variant="outline"
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className='mr-2'
+                      className="mr-2"
                     >
                       +
                     </Button>
                     <Button
-                      variant='outline'
+                      variant="outline"
                       onClick={() => removeFromCart(item.id)}
-                      className='text-red-500'
+                      className="text-red-500"
                     >
                       <FaRegTrashAlt />
                     </Button>
                   </div>
                 </div>
               ))}
-              <div className='flex justify-between items-center mt-4'>
-                <h2 className='text-xl font-bold'>
+              <div className="mt-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold">
                   Total Amount: ${totalAmount.toFixed(2)}
                 </h2>
               </div>
             </div>
           )}
         </div>
+        <Toaster />
 
-        <div className='w-1/3 pl-4'>
-          <div className='bg-white p-4 border border-gray-200 rounded-lg shadow-md'>
-            <h2 className='text-lg font-semibold mb-4'>Checkout</h2>
+        <div className="w-1/3 pl-4">
+          <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
+            <h2 className="mb-4 text-lg font-semibold">Checkout</h2>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder='Add a note (optional)'
-              className='w-full h-24 mb-4 p-2 border border-gray-300 rounded-lg'
+              placeholder="Add a note (optional)"
+              className="mb-4 h-24 w-full resize-none rounded-lg border border-gray-300 p-2"
             />
-            <div className='mb-4'>
+            <div className="mb-4">
               <input
-                type='text'
+                type="text"
                 value={voucher}
                 onChange={(e) => setVoucher(e.target.value)}
-                placeholder='Enter voucher code'
-                className='w-full p-2 border border-gray-300 rounded-lg'
+                placeholder="Enter voucher code"
+                className="w-full rounded-lg border border-gray-300 p-2"
               />
               <Button
                 onClick={handleApplyVoucher}
-                variant='outline'
-                className='mt-2 border-2 border-rose-500 text-rose-500 hover:bg-rose-600 hover:text-gray-100'
+                variant="outline"
+                className="mt-2 border-2 border-rose-500 text-rose-500 hover:bg-rose-600 hover:text-gray-100"
               >
                 Apply Voucher
               </Button>
             </div>
-            <Button
-              onClick={handleCheckout}
-              className='w-full'
-            >
+            <Button onClick={handleCheckout} className="w-full">
               Checkout
             </Button>
           </div>
