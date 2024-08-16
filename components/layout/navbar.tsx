@@ -1,21 +1,28 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/AuthContext';
-import { useCart } from '@/context/CartContext';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { FaRegUser } from 'react-icons/fa';
-import { MdCategory, MdOutlineLocalGroceryStore } from 'react-icons/md';
-import AuthForm from './authForm';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import { categories } from "@/data/categories";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { AiOutlineSearch } from "react-icons/ai";
+import { FaRegUser } from "react-icons/fa";
+import { MdCategory, MdOutlineLocalGroceryStore } from "react-icons/md";
+import AuthForm from "./authForm";
 
 const links = [
-  { href: '#', text: 'Home' },
-  { href: '#', text: 'User Account' },
-  { href: '#', text: 'Vendor Account' },
-  { href: '#', text: 'Track My Order' },
-  { href: '#', text: 'Back to Demos' },
+  { href: "/", text: "Home" },
+  { href: "/profile", text: "User Account" },
+  { href: "#", text: "Vendor Account" },
+  { href: "#", text: "Track My Order" },
+  { href: "#", text: "Back to Demos" },
 ];
 
 const Navbar: React.FC = () => {
@@ -47,60 +54,71 @@ const Navbar: React.FC = () => {
 
   const handleUserIconClick = () => {
     if (user) {
-      router.push('/profile');
+      router.push("/profile");
     } else {
       handleOpenDialog();
     }
   };
 
   return (
-    <div className='w-screen shadow-lg'>
-      <div className='container flex flex-col justify-between'>
-        <div className='h-[5rem] flex justify-between items-center'>
-          <Link href='/' className='icon-7'>
+    <div className="w-screen shadow-lg">
+      <div className="container flex flex-col justify-between">
+        <div className="flex h-[5rem] items-center justify-between">
+          <Link href="/" className="icon-7">
             Bajar
           </Link>
-          <div className='relative w-[660px]'>
-            <AiOutlineSearch className='absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg' />
+          <div className="relative w-[660px]">
+            <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 transform text-lg text-gray-400" />
             <input
-              type='text'
-              className='w-full h-[44px] border border-gray-200 focus:border-blue-300 rounded-full pl-12 pr-5 outline-none'
-              placeholder='Search'
+              type="text"
+              className="h-[44px] w-full rounded-full border border-gray-200 pl-12 pr-5 outline-none focus:border-blue-300"
+              placeholder="Search"
             />
           </div>
-          <div className='flex gap-3'>
+          <div className="flex gap-3">
             <span
-              className='bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center cursor-pointer'
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200"
               onClick={handleUserIconClick}
             >
-              <FaRegUser className='text-lg' />
+              <FaRegUser className="text-lg" />
             </span>
             <Link
-              href='/carts'
-              className='relative bg-slate-100 hover:bg-slate-200 h-10 w-10 rounded-full flex items-center justify-center'
+              href="/carts"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200"
             >
-              <MdOutlineLocalGroceryStore className='text-lg' />
+              <MdOutlineLocalGroceryStore className="text-lg" />
               {cartItemCount > 0 && (
-                <span className='absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>
+                <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
                   {cartItemCount}
                 </span>
               )}
             </Link>
           </div>
         </div>
-        <div className='h-[3.75rem] flex justify-between items-center'>
-          <div className='flex items-center hover:bg-slate-100 rounded px-4 py-1'>
-            <MdCategory className='text-lg mr-2' />
-            <a href='#' className='text-gray-600 hover:text-gray-900'>
-              Category
-            </a>
-          </div>
-          <div className='flex gap-5'>
+
+        <div className="flex h-[3.75rem] items-center justify-between">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <div className="flex items-center rounded px-4 py-1 hover:bg-slate-100">
+                <MdCategory className="mr-2 text-lg" />
+                <p className="text-gray-600 hover:text-gray-900">Category</p>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {categories.map((category) => (
+                <DropdownMenuItem key={category.id}>
+                  {category.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="flex gap-5">
             {links.map((link) => (
               <Link
                 key={link.text}
                 href={link.href}
-                className='text-gray-600 hover:text-gray-900'
+                className="text-gray-600 hover:text-gray-900"
               >
                 {link.text}
               </Link>

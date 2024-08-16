@@ -1,43 +1,40 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext';
-import { auth, firestore } from '@/lib/firebase';
-import { doc, setDoc, Timestamp } from 'firebase/firestore';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import AppWrapper from '../AppWrapper';
-import BillingAddressForm from './components/billingAddressForm';
-import ShippingAddressForm from './components/shippingAddressForm';
-import OrderSummary from './components/orderSummary';
+import { useCart } from "@/context/CartContext";
+import { auth, firestore } from "@/lib/firebase";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import AppWrapper from "../AppWrapper";
+import AddressForm from "./components/addressForm";
+import OrderSummary from "./components/orderSummary";
 
 const Checkout: React.FC = () => {
   const router = useRouter();
-  const { cartItems, clearCart } = useCart(); 
+  const { cartItems, clearCart } = useCart();
   const [billingData, setBillingData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    zipCode: '',
-    address1: '',
-    email: '',
-    company: '',
-    country: '',
-    address2: '',
+    fullName: "",
+    phoneNumber: "",
+    zipCode: "",
+    address1: "",
+    email: "",
+    company: "",
+    country: "",
+    address2: "",
   });
   const [shippingData, setShippingData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    zipCode: '',
-    address1: '',
-    email: '',
-    company: '',
-    country: '',
-    address2: '',
+    fullName: "",
+    phoneNumber: "",
+    zipCode: "",
+    address1: "",
+    email: "",
+    company: "",
+    country: "",
+    address2: "",
   });
   const [showShippingAddress, setShowShippingAddress] = useState(true);
   const [subtotal, setSubtotal] = useState(() => {
-    const savedSubtotal = localStorage.getItem('subtotal');
+    const savedSubtotal = localStorage.getItem("subtotal");
     return savedSubtotal ? parseFloat(savedSubtotal) : 100;
   });
   const [shippingCharge, setShippingCharge] = useState(10);
@@ -47,11 +44,11 @@ const Checkout: React.FC = () => {
   const total = subtotal + shippingCharge + tax - discount;
 
   useEffect(() => {
-    const savedBillingData = localStorage.getItem('billingData');
+    const savedBillingData = localStorage.getItem("billingData");
     if (savedBillingData) {
       setBillingData(JSON.parse(savedBillingData));
     }
-    const savedShippingData = localStorage.getItem('shippingData');
+    const savedShippingData = localStorage.getItem("shippingData");
     if (savedShippingData) {
       setShippingData(JSON.parse(savedShippingData));
     }
@@ -61,20 +58,20 @@ const Checkout: React.FC = () => {
     const { name, value } = e.target;
     const updatedBillingData = { ...billingData, [name]: value };
     setBillingData(updatedBillingData);
-    localStorage.setItem('billingData', JSON.stringify(updatedBillingData));
+    localStorage.setItem("billingData", JSON.stringify(updatedBillingData));
   };
 
   const handleShippingInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const { name, value } = e.target;
     const updatedShippingData = { ...shippingData, [name]: value };
     setShippingData(updatedShippingData);
-    localStorage.setItem('shippingData', JSON.stringify(updatedShippingData));
+    localStorage.setItem("shippingData", JSON.stringify(updatedShippingData));
   };
 
   const handleShippingAddressToggle = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (e.target.checked) {
       setShippingData(billingData);
@@ -84,79 +81,22 @@ const Checkout: React.FC = () => {
     }
   };
 
-  const handleConfirmOrder = async () => {
-    if (!auth.currentUser) {
-      return;
-    }
-
-    const orderId = new Date().toISOString(); 
-    const userId = auth.currentUser.uid;
-
-    const orderData = {
-      orderId,
-      date: Timestamp.now(),
-      subtotal,
-      shippingCharge,
-      tax,
-      discount,
-      totalAmount: total,
-      billingAddress: billingData,
-      shippingAddress: showShippingAddress ? billingData : shippingData,
-      paymentMethod: 'Credit Card', 
-      items: cartItems.map((item) => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-      })),
-    };
-
-    try {
-      await setDoc(
-        doc(firestore, 'users', userId, 'orders', orderId),
-        orderData
-      );
-
-      localStorage.removeItem('cart');
-      localStorage.removeItem('billingData');
-      localStorage.removeItem('shippingData');
-      clearCart();
-
-      router.push('/confirmation');
-    } catch (error) {
-      console.error('Error saving order to Firestore:', error);
-    }
-  };
-
   return (
     <AppWrapper>
-      <div className='container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8'>
-        <form className='md:col-span-2' onSubmit={handleConfirmOrder}>
-          <BillingAddressForm
-            billingData={billingData}
-            handleBillingInputChange={handleBillingInputChange}
+      <div className="container mx-auto grid grid-cols-3 gap-8 px-4 py-8">
+        <div className="col-span-2">
+          <AddressForm
+            title="Address Form"
           />
-          <ShippingAddressForm
-            shippingData={shippingData}
-            handleShippingInputChange={handleShippingInputChange}
-            showShippingAddress={showShippingAddress}
-            handleShippingAddressToggle={handleShippingAddressToggle}
+        </div>
+        <div className="col-span-1">
+          <OrderSummary
+            subtotal={subtotal}
+            shippingCharge={shippingCharge}
+            tax={tax}
+            discount={discount}
+            total={total}
           />
-        </form>
-
-        <OrderSummary
-          subtotal={subtotal}
-          shippingCharge={shippingCharge}
-          tax={tax}
-          discount={discount}
-          total={total}
-        />
-
-        <div className='flex justify-between mt-6'>
-          <Link href='/carts'>
-            <Button variant='outline'>Back to Cart</Button>
-          </Link>
-          <Button type='submit' onClick={handleConfirmOrder}>Place Order</Button>
         </div>
       </div>
     </AppWrapper>
