@@ -4,8 +4,6 @@ import AuthForm from "@/components/layout/authForm";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import { auth, firestore } from "@/lib/firebase";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import AppWrapper from "../AppWrapper";
@@ -28,6 +26,7 @@ const PaymentPage: React.FC = () => {
     selectedPaymentMethod,
     cartItems,
     clearCart,
+    saveOrderData,
   } = useCart();
 
   const handleAuthClose = () => {
@@ -36,46 +35,47 @@ const PaymentPage: React.FC = () => {
   };
 
   const saveOrder = async () => {
-    if (!auth.currentUser) {
-      toast({
-        title: "User is not authenticated",
-        description: "User must be logged in to place an order",
-      });
-      throw new Error("User must be logged in to place an order");
-    } else {
-      const orderId = new Date().toISOString();
-      const userId = auth.currentUser.uid;
+    // if (!auth.currentUser) {
+    //   toast({
+    //     title: "User is not authenticated",
+    //     description: "User must be logged in to place an order",
+    //   });
+    //   throw new Error("User must be logged in to place an order");
+    // } else {
+    //    const orderId = new Date().toISOString();
+    //   const userId = auth.currentUser.uid;
 
-      const orderData = {
-        orderId,
-        date: Timestamp.now(),
-        subtotal,
-        shippingCharge,
-        tax,
-        discount,
-        totalAmount,
-        addFormData,
-        paymentMethod: selectedPaymentMethod,
-        items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-      };
+    //   const orderData = {
+    //     orderId,
+    //     date: Timestamp.now(),
+    //     subtotal,
+    //     shippingCharge,
+    //     tax,
+    //     discount,
+    //     totalAmount,
+    //     addFormData,
+    //     paymentMethod: selectedPaymentMethod,
+    //     items: cartItems.map((item) => ({
+    //       id: item.id,
+    //       name: item.name,
+    //       price: item.price,
+    //       quantity: item.quantity,
+    //     })),
+    //   };
 
-      try {
-        await setDoc(
-          doc(firestore, "users", userId, "orders", orderId),
-          orderData,
-        );
-        router.push("/confirmation");
-        clearCart();
-      } catch (error) {
-        console.error("Error saving order to Firestore:", error);
-        throw new Error("Error saving order to Firestore");
-      }
-    }
+    //   try {
+    //     await setDoc(
+    //       doc(firestore, "users", userId, "orders", orderId),
+    //       orderData,
+    //     );
+    //     router.push("/confirmation");
+    //     clearCart();
+    //   } catch (error) {
+    //     console.error("Error saving order to Firestore:", error);
+    //     throw new Error("Error saving order to Firestore");
+    //   }
+    // }
+    saveOrderData();
   };
 
   return (

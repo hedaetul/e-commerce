@@ -1,131 +1,100 @@
 "use client";
 
+import { toast } from "@/components/ui/use-toast";
+import { auth, firestore } from "@/lib/firebase";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-interface CartItem {
+type CartItem = {
   id: string;
   name: string;
   photo: string;
   price: number;
   quantity: number;
-}
+};
 
-interface Address {
-  name: string;
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-interface CartContextType {
+type CartContextType = {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
-  totalAmount: number;
   subtotal: number;
   shippingCharge: number;
   tax: number;
   discount: number;
-  billingAddress: Address | null;
-  shippingAddress: Address | null;
+  totalAmount: number;
   selectedPaymentMethod: string;
   updateSubtotal: (amount: number) => void;
   updateShippingCharge: (amount: number) => void;
   updateTax: (amount: number) => void;
   updateDiscount: (amount: number) => void;
-  updateBillingAddress: (address: Address) => void;
-  updateShippingAddress: (address: Address) => void;
   updateSelectedPaymentMethod: (method: string) => void;
   clearCart: () => void;
-  addFormData: {};
-  setAddFormData: React.Dispatch<React.SetStateAction<{}>>;
-}
+  addFormData: Record<string, any>;
+  setAddFormData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  saveOrderData: () => Promise<void>;
+  orderData: object | null;
+};
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cartItems");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  const [subtotal, setSubtotal] = useState<number>(() => {
-    const savedSubtotal = localStorage.getItem("subtotal");
-    return savedSubtotal ? parseFloat(savedSubtotal) : 100;
-  });
+  const calculateSubtotal = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
 
+  const [subtotal, setSubtotal] = useState<number>(calculateSubtotal);
   const [shippingCharge, setShippingCharge] = useState<number>(() => {
     const savedShippingCharge = localStorage.getItem("shippingCharge");
-    return savedShippingCharge ? parseFloat(savedShippingCharge) : 10;
+    return savedShippingCharge ? parseFloat(savedShippingCharge) : 0;
   });
 
   const [tax, setTax] = useState<number>(() => {
     const savedTax = localStorage.getItem("tax");
-    return savedTax ? parseFloat(savedTax) : 8;
+    return savedTax ? parseFloat(savedTax) : 0;
   });
 
   const [discount, setDiscount] = useState<number>(() => {
     const savedDiscount = localStorage.getItem("discount");
-    return savedDiscount ? parseFloat(savedDiscount) : 5;
+    return savedDiscount ? parseFloat(savedDiscount) : 0;
   });
 
-  const [billingAddress, setBillingAddress] = useState<Address | null>(() => {
-    const savedAddress = localStorage.getItem("billingAddress");
-    return savedAddress ? JSON.parse(savedAddress) : null;
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(() => {
+    const savedPaymentMethod = localStorage.getItem("selectedPaymentMethod");
+    return savedPaymentMethod ? savedPaymentMethod : "credit-card";
   });
 
-  const [shippingAddress, setShippingAddress] = useState<Address | null>(() => {
-    const savedAddress = localStorage.getItem("shippingAddress");
-    return savedAddress ? JSON.parse(savedAddress) : null;
-  });
+  const [addFormData, setAddFormData] = useState<Record<string, any>>({});
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [orderData, setOrderData] = useState<object | null>(null);
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
-    () => {
-      const savedPaymentMethod = localStorage.getItem("selectedPaymentMethod");
-      return savedPaymentMethod ? savedPaymentMethod : "credit-card";
-    },
-  );
-  const [addFormData, setAddFormData] = useState<{}>({});
-
-  const totalAmount = subtotal + shippingCharge + tax - discount;
+  const router = useRouter();
 
   useEffect(() => {
+    const newSubtotal = calculateSubtotal();
+    setSubtotal(newSubtotal);
+
+    const newTotalAmount = newSubtotal + shippingCharge + tax - discount;
+    setTotalAmount(newTotalAmount);
+
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    localStorage.setItem("subtotal", subtotal.toFixed(2));
+    localStorage.setItem("subtotal", newSubtotal.toFixed(2));
     localStorage.setItem("shippingCharge", shippingCharge.toFixed(2));
     localStorage.setItem("tax", tax.toFixed(2));
     localStorage.setItem("discount", discount.toFixed(2));
-    localStorage.setItem("totalAmount", totalAmount.toFixed(2));
-    if (billingAddress) {
-      localStorage.setItem("billingAddress", JSON.stringify(billingAddress));
-    }
-    if (shippingAddress) {
-      localStorage.setItem("shippingAddress", JSON.stringify(shippingAddress));
-    }
+    localStorage.setItem("totalAmount", newTotalAmount.toFixed(2));
     localStorage.setItem("selectedPaymentMethod", selectedPaymentMethod);
-  }, [
-    cartItems,
-    subtotal,
-    shippingCharge,
-    tax,
-    discount,
-    totalAmount,
-    billingAddress,
-    shippingAddress,
-    selectedPaymentMethod,
-  ]);
+  }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
-      const itemIndex = prevItems.findIndex(
-        (cartItem) => cartItem.id === item.id,
-      );
+      const itemIndex = prevItems.findIndex((cartItem) => cartItem.id === item.id);
       if (itemIndex >= 0) {
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
@@ -142,8 +111,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateQuantity = (id: string, quantity: number) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item,
-      ),
+        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
+      )
     );
   };
 
@@ -163,14 +132,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setDiscount(amount);
   };
 
-  const updateBillingAddress = (address: Address) => {
-    setBillingAddress(address);
-  };
-
-  const updateShippingAddress = (address: Address) => {
-    setShippingAddress(address);
-  };
-
   const updateSelectedPaymentMethod = (method: string) => {
     setSelectedPaymentMethod(method);
   };
@@ -180,6 +141,47 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("cartItems");
   };
 
+  const saveOrderData = async () => {
+    if (!auth.currentUser) {
+      toast({
+        title: "User is not authenticated",
+        description: "User must be logged in to place an order",
+      });
+      throw new Error("User must be logged in to place an order");
+    } else {
+      const orderId = new Date().toISOString();
+      const userId = auth.currentUser.uid;
+
+      const orderData = {
+        orderId,
+        date: Timestamp.now(),
+        subtotal,
+        shippingCharge,
+        tax,
+        discount,
+        totalAmount,
+        addFormData,
+        paymentMethod: selectedPaymentMethod,
+        items: cartItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      };
+
+      try {
+        await setDoc(doc(firestore, "users", userId, "orders", orderId), orderData);
+        setOrderData(orderData); // Save orderData to state
+        router.push(`/confirmation?orderId=${orderId}`);
+        clearCart();
+      } catch (error) {
+        console.error("Error saving order to Firestore:", error);
+        throw new Error("Error saving order to Firestore");
+      }
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -187,24 +189,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         addToCart,
         removeFromCart,
         updateQuantity,
-        totalAmount,
         subtotal,
         shippingCharge,
         tax,
         discount,
-        billingAddress,
-        shippingAddress,
+        totalAmount,
         selectedPaymentMethod,
         updateSubtotal,
         updateShippingCharge,
         updateTax,
         updateDiscount,
-        updateBillingAddress,
-        updateShippingAddress,
         updateSelectedPaymentMethod,
         clearCart,
         addFormData,
         setAddFormData,
+        saveOrderData,
+        orderData
       }}
     >
       {children}

@@ -1,26 +1,41 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
 import { format } from "date-fns";
 import Link from "next/link";
 import React from "react";
+import { useCart } from "@/context/CartContext";
 
 const ConfirmationPage: React.FC = () => {
+  const { orderData } = useCart();
+
+  if (!orderData) {
+    return <p>Loading...</p>;
+  }
+
   const {
+    orderId,
+    date,
     subtotal,
     shippingCharge,
     tax,
     discount,
     totalAmount,
-    billingAddress,
-    shippingAddress,
-    selectedPaymentMethod,
-    cartItems,
-  } = useCart();
+    paymentMethod,
+    items,
+  } = orderData as {
+    orderId: string;
+    date: { toDate: () => Date };
+    subtotal: number;
+    shippingCharge: number;
+    tax: number;
+    discount: number;
+    totalAmount: number;
+    paymentMethod: string;
+    items: { id: string; name: string; price: number; quantity: number }[];
+  };
 
-  const orderId = "ORDER12345"; // Replace with dynamic order ID
-  const orderDate = format(new Date(), "MMMM dd, yyyy");
+  const formattedDate = format(date.toDate(), "MMMM dd, yyyy");
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -31,21 +46,21 @@ const ConfirmationPage: React.FC = () => {
 
       <div className="mt-8 rounded-lg bg-white p-6 shadow-lg">
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Date: {orderDate}</p>
+          <p className="text-sm text-gray-600">Date: {formattedDate}</p>
           <p className="text-sm text-gray-600">Order ID: {orderId}</p>
         </div>
 
         <div className="mb-6">
           <h2 className="mb-2 text-xl font-semibold">Payment Method</h2>
           <p className="text-gray-800">
-            {selectedPaymentMethod.replace(/-/g, " ").toUpperCase()}
+            {paymentMethod.replace(/-/g, " ").toUpperCase()}
           </p>
         </div>
 
         <div className="mb-6">
           <h2 className="mb-2 text-xl font-semibold">Order Summary</h2>
           <ul className="space-y-2">
-            {cartItems.map((item) => (
+            {items.map((item) => (
               <li key={item.id} className="flex justify-between">
                 <span>
                   {item.name} x {item.quantity}
@@ -58,9 +73,27 @@ const ConfirmationPage: React.FC = () => {
 
         <hr className="my-4 border-gray-300" />
 
-        <div className="flex justify-between text-lg font-bold">
-          <span>Total:</span>
-          <span>${totalAmount.toFixed(2)}</span>
+        <div className="space-y-2 text-lg font-bold">
+          <div className="flex justify-between">
+            <span>Subtotal:</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Shipping Charge:</span>
+            <span>${shippingCharge.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax:</span>
+            <span>${tax.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Discount:</span>
+            <span>-${discount.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between font-bold">
+            <span>Total:</span>
+            <span>${totalAmount.toFixed(2)}</span>
+          </div>
         </div>
       </div>
 

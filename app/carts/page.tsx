@@ -11,7 +11,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import AppWrapper from "../AppWrapper";
 
 const Carts: React.FC = () => {
-  const { cartItems, removeFromCart, updateQuantity, totalAmount } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, subtotal } = useCart();
   const router = useRouter();
   const [note, setNote] = useState("");
   const [voucher, setVoucher] = useState("");
@@ -85,7 +85,7 @@ const Carts: React.FC = () => {
               ))}
               <div className="mt-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold">
-                  Total Amount: ${totalAmount.toFixed(2)}
+                  Total Amount: ${subtotal.toFixed(2)}
                 </h2>
               </div>
             </div>
