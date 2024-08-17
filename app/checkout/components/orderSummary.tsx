@@ -1,13 +1,24 @@
 import React from "react";
-import { useCart } from "@/context/CartContext";
 
-const OrderSummary: React.FC = () => {
-  const { subtotal, shippingCharge, tax, discount, totalAmount } = useCart();
+type OrderSummaryProps = {
+  subtotal: number;
+  shippingCharge: number;
+  tax: number;
+  discount: number;
+  total: number;
+};
 
+const OrderSummary: React.FC<OrderSummaryProps> = ({
+  subtotal,
+  shippingCharge,
+  tax,
+  discount,
+  total,
+}) => {
   return (
-    <div className="form-shadow h-fit rounded-lg bg-white p-6">
-      <h1 className="mb-6 text-2xl font-bold">Order Summary</h1>
-      <div className="space-y-4">
+    <div className="rounded-lg bg-white p-6 shadow-lg">
+      <h2 className="mb-4 text-xl font-semibold">Order Summary</h2>
+      <div className="space-y-2">
         <div className="flex justify-between">
           <span>Subtotal:</span>
           <span>${subtotal.toFixed(2)}</span>
@@ -26,7 +37,7 @@ const OrderSummary: React.FC = () => {
         </div>
         <div className="flex justify-between font-bold">
           <span>Total:</span>
-          <span>${totalAmount.toFixed(2)}</span>
+          <span>${total.toFixed(2)}</span>
         </div>
       </div>
     </div>
