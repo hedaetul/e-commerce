@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
@@ -91,38 +90,39 @@ const Carts: React.FC = () => {
             </div>
           )}
         </div>
-        <Toaster />
 
-        <div className="w-1/3 pl-4">
-          <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Checkout</h2>
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Add a note (optional)"
-              className="mb-4 h-24 w-full resize-none rounded-lg border border-gray-300 p-2"
-            />
-            <div className="mb-4">
-              <input
-                type="text"
-                value={voucher}
-                onChange={(e) => setVoucher(e.target.value)}
-                placeholder="Enter voucher code"
-                className="w-full rounded-lg border border-gray-300 p-2"
+        {cartItems.length > 0 ? (
+          <div className="w-1/3 pl-4">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
+              <h2 className="mb-4 text-lg font-semibold">Checkout</h2>
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Add a note (optional)"
+                className="mb-4 h-24 w-full resize-none rounded-lg border border-gray-300 p-2"
               />
-              <Button
-                onClick={handleApplyVoucher}
-                variant="outline"
-                className="mt-2 border-2 border-rose-500 text-rose-500 hover:bg-rose-600 hover:text-gray-100"
-              >
-                Apply Voucher
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={voucher}
+                  onChange={(e) => setVoucher(e.target.value)}
+                  placeholder="Enter voucher code"
+                  className="w-full rounded-lg border border-gray-300 p-2"
+                />
+                <Button
+                  onClick={handleApplyVoucher}
+                  variant="outline"
+                  className="mt-2 border-2 border-rose-500 text-rose-500 hover:bg-rose-600 hover:text-gray-100"
+                >
+                  Apply Voucher
+                </Button>
+              </div>
+              <Button onClick={handleCheckout} className="w-full">
+                Checkout
               </Button>
             </div>
-            <Button onClick={handleCheckout} className="w-full">
-              Checkout
-            </Button>
           </div>
-        </div>
+        ) : null}
       </div>
     </AppWrapper>
   );

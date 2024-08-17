@@ -39,14 +39,19 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const savedCart = localStorage.getItem("cartItems");
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0,
+    );
   };
 
   const [subtotal, setSubtotal] = useState<number>(calculateSubtotal);
@@ -65,10 +70,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return savedDiscount ? parseFloat(savedDiscount) : 0;
   });
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(() => {
-    const savedPaymentMethod = localStorage.getItem("selectedPaymentMethod");
-    return savedPaymentMethod ? savedPaymentMethod : "credit-card";
-  });
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    () => {
+      const savedPaymentMethod = localStorage.getItem("selectedPaymentMethod");
+      return savedPaymentMethod ? savedPaymentMethod : "credit-card";
+    },
+  );
 
   const [addFormData, setAddFormData] = useState<Record<string, any>>({});
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -94,7 +101,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
-      const itemIndex = prevItems.findIndex((cartItem) => cartItem.id === item.id);
+      const itemIndex = prevItems.findIndex(
+        (cartItem) => cartItem.id === item.id,
+      );
       if (itemIndex >= 0) {
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
@@ -111,8 +120,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateQuantity = (id: string, quantity: number) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
-      )
+        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item,
+      ),
     );
   };
 
@@ -146,6 +155,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast({
         title: "User is not authenticated",
         description: "User must be logged in to place an order",
+        className: "bg-rose-600 text-white",
       });
       throw new Error("User must be logged in to place an order");
     } else {
@@ -171,7 +181,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       try {
-        await setDoc(doc(firestore, "users", userId, "orders", orderId), orderData);
+        await setDoc(
+          doc(firestore, "users", userId, "orders", orderId),
+          orderData,
+        );
         setOrderData(orderData); // Save orderData to state
         router.push(`/confirmation?orderId=${orderId}`);
         clearCart();
@@ -204,7 +217,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addFormData,
         setAddFormData,
         saveOrderData,
-        orderData
+        orderData,
       }}
     >
       {children}

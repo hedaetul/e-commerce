@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import AppWrapper from "../AppWrapper";
 import PaymentMethodSection from "./components/paymentMethod";
+import { Toaster } from "@/components/ui/toaster";
 
 const PaymentPage: React.FC = () => {
   const { user } = useAuth();
@@ -84,6 +85,8 @@ const PaymentPage: React.FC = () => {
         <div className="md:col-span-2">
           <PaymentMethodSection onSubmit={saveOrder} />
         </div>
+        <Toaster />
+
 
         <div className="h-fit rounded-lg bg-white p-6 shadow-lg">
           <h1 className="mb-6 text-2xl font-bold">Order Summary</h1>
