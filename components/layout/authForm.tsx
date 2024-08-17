@@ -58,7 +58,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
       } else {
         await signupWithEmail(data.email, data.password);
       }
-      onClose(); // Close the dialog on successful login/signup
+      onClose(); 
     } catch (error: any) {
       const errorMessage =
         error.message || "An error occurred. Please try again.";
@@ -69,7 +69,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
   const handleGoogleLogin = async () => {
     try {
       await loginWithGoogle();
-      onClose(); // Close the dialog on successful Google login
+      onClose();
     } catch (error: any) {
       const errorMessage =
         error.message || "An error occurred. Please try again.";

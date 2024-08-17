@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "@/components/ui/use-toast";
 import { auth, firestore } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -152,11 +151,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const saveOrderData = async () => {
     if (!auth.currentUser) {
-      toast({
-        title: "User is not authenticated",
-        description: "User must be logged in to place an order",
-        className: "bg-rose-600 text-white",
-      });
       throw new Error("User must be logged in to place an order");
     } else {
       const orderId = new Date().toISOString();

@@ -10,12 +10,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Toaster } from "@/components/ui/toaster";
-import { useToast } from "@/components/ui/use-toast";
 import { useCart } from "@/context/CartContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -54,13 +51,12 @@ const AddressForm = ({ title }: { title: string }) => {
 
   const onSubmit = (formData: AddressFormValues) => {
     setAddFormData(formData);
-    router.push('/payment')
+    router.push("/payment");
   };
 
   return (
     <div className="rounded-lg bg-white px-6">
       <h1 className="mb-6 text-2xl font-bold">{title}</h1>
-      <Toaster />
 
       <div className="w-full">
         <Form {...form}>
