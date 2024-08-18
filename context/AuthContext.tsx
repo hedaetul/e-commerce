@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await setDoc(userRef, { personalInformation: userData }, { merge: true });
   };
 
+
   const loginWithEmail = async (email: string, password: string) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     if (userCredential.user) {
