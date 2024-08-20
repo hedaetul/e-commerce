@@ -181,7 +181,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         setOrderData(orderData); // Save orderData to state
         router.push(`/confirmation?orderId=${orderId}`);
-        clearCart();
       } catch (error) {
         console.error("Error saving order to Firestore:", error);
         throw new Error("Error saving order to Firestore");
