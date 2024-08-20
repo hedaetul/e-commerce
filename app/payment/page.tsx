@@ -1,19 +1,21 @@
 "use client";
 
-import AuthForm from "@/components/layout/authForm";
 import { Toaster } from "@/components/ui/toaster";
-import { toast } from "@/components/ui/use-toast";
-import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
-import React, { useState } from "react";
+import convertSubCurrency from "@/lib/convertSubCurrency";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import React from "react";
 import AppWrapper from "../AppWrapper";
-import PaymentMethodSection from "./components/paymentMethod";
+import CheckoutForm from "./components/checkoutForm";
+
+if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
+  throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
+}
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 const PaymentPage: React.FC = () => {
-  const { user } = useAuth();
-  const [showAuthForm, setShowAuthForm] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
   const {
     totalAmount,
     subtotal,
@@ -21,38 +23,30 @@ const PaymentPage: React.FC = () => {
     tax,
     discount,
     saveOrderData,
+    clearCart,
+    cartItems,
   } = useCart();
 
-  const handleAuthClose = () => {
-    setShowAuthForm(false);
-    setErrorMessage("");
+  const saveOrder = async () => {
+    clearCart();
   };
 
-  const saveOrder = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "You need to be logged in to place an order.",
-        variant: "destructive",
-        duration: 2000,
-      });
-      setTimeout(() => {
-        setShowAuthForm(true);
-      }, 2000); 
-      return;
-    }
-    try {
-      await saveOrderData();
-    } catch (error) {
-      console.error("Error saving order:", error);
-    }
-  };
+  const amount = totalAmount;
 
   return (
     <AppWrapper>
       <div className="container mx-auto grid grid-cols-3 gap-8 px-4 py-8">
         <div className="col-span-2">
-          <PaymentMethodSection onSubmit={saveOrder} />
+          <Elements
+            stripe={stripePromise}
+            options={{
+              mode: "payment",
+              amount: convertSubCurrency(amount),
+              currency: "usd",
+            }}
+          >
+            <CheckoutForm amount={amount} />
+          </Elements>
         </div>
         <div className="col-span-1">
           <div className="h-fit rounded-lg bg-white p-6 shadow-lg">
@@ -83,14 +77,6 @@ const PaymentPage: React.FC = () => {
         </div>
       </div>
 
-      {showAuthForm && (
-        <AuthForm
-          isLogin={isLogin}
-          toggleLoginSignup={() => setIsLogin(!isLogin)}
-          setError={setErrorMessage}
-          onClose={handleAuthClose}
-        />
-      )}
       <Toaster />
     </AppWrapper>
   );
