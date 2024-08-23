@@ -4,7 +4,9 @@ import HeroSection from "./HeroSection";
 const Home = () => {
   return (
     <AppWrapper>
-      <HeroSection />
+      <div className="bg-[#F6F6F6]">
+        <HeroSection />
+      </div>
     </AppWrapper>
   );
 };
