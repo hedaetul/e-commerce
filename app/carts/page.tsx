@@ -34,8 +34,8 @@ const Carts: React.FC = () => {
 
   return (
     <AppWrapper>
-      <div className="container mx-auto flex px-4 py-8">
-        <div className="w-2/3 pr-4">
+      <div className="container mx-auto px-4 py-8 md:flex">
+        <div className="pr-4 md:w-2/3">
           {cartItems.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
@@ -92,7 +92,7 @@ const Carts: React.FC = () => {
         </div>
 
         {cartItems.length > 0 ? (
-          <div className="w-1/3 pl-4">
+          <div className="md:w-1/3 md:pl-4">
             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-md">
               <h2 className="mb-4 text-lg font-semibold">Checkout</h2>
               <textarea

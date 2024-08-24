@@ -12,17 +12,17 @@ import { categories } from "@/data/categories";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import { FaRegUser } from "react-icons/fa";
+import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
+import { FaRegUser, FaShoppingCart, FaTruck } from "react-icons/fa";
 import { MdCategory, MdOutlineLocalGroceryStore } from "react-icons/md";
 import AuthForm from "./authForm";
 
 const links = [
-  { href: "/", text: "Home" },
-  { href: "/profile", text: "User Account" },
-  { href: "#", text: "Vendor Account" },
-  { href: "#", text: "Track My Order" },
-  { href: "#", text: "Back to Demos" },
+  { href: "/", text: "Home", icon: <AiOutlineHome /> },
+  { href: "/profile", text: "User Account", icon: <FaRegUser /> },
+  { href: "#", text: "Vendor Account", icon: <FaRegUser /> },
+  { href: "#", text: "Track My Order", icon: <FaTruck /> },
+  { href: "#", text: "Back to Demos", icon: <FaShoppingCart /> },
 ];
 
 const Navbar: React.FC = () => {
@@ -62,12 +62,14 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="w-screen shadow-lg">
-      <div className="container flex flex-col justify-between">
-        <div className="flex h-[5rem] items-center justify-between">
-          <Link href="/" className="icon-7">
+      <div className="sticky top-0 container flex flex-col justify-between">
+        <div className="flex relative h-[5rem] items-center justify-between">
+          <Link href="/" className="icon-7 flex items-center">
             Bajar
           </Link>
-          <div className="relative w-[660px]">
+
+          {/* Search bar and user icon for larger screens */}
+          <div className=" w-[300px] md:ml-4 md:block md:w-[660px]">
             <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 transform text-lg text-gray-400" />
             <input
               type="text"
@@ -75,7 +77,20 @@ const Navbar: React.FC = () => {
               placeholder="Search"
             />
           </div>
-          <div className="flex gap-3">
+          {/* Cart icon visible on small screens */}
+          <Link
+            href="/carts"
+            className="relative ml-4 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 md:hidden"
+          >
+            <MdOutlineLocalGroceryStore className="text-lg" />
+            {cartItemCount > 0 && (
+              <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
+          <div className="hidden gap-3 md:flex">
             <span
               className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200"
               onClick={handleUserIconClick}
@@ -96,7 +111,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex h-[3.75rem] items-center justify-between">
+        <div className="hidden h-[3.75rem] items-center justify-between md:flex">
           <DropdownMenu>
             <DropdownMenuTrigger>
               <div className="flex items-center rounded px-4 py-1 hover:bg-slate-100">
@@ -126,6 +141,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
       {isDialogOpen && (
         <AuthForm
           isLogin={isLogin}
@@ -134,6 +150,23 @@ const Navbar: React.FC = () => {
           onClose={handleCloseDialog}
         />
       )}
+
+      {/* Sticky bottom navbar for small screens */}
+      <div className="shadow-btm fixed bottom-0 left-0 right-0 z-10 flex items-center justify-around bg-white p-2 md:hidden">
+        <Link href="/" className="text-gray-600 hover:text-gray-900">
+          <AiOutlineHome className="text-2xl" />
+        </Link>
+        <Link href="/profile" className="text-gray-600 hover:text-gray-900">
+          <FaRegUser className="text-2xl" />
+        </Link>
+        {/* Cart icon moved up, not repeated here */}
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          <FaTruck className="text-2xl" />
+        </Link>
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          <FaShoppingCart className="text-2xl" />
+        </Link>
+      </div>
     </div>
   );
 };

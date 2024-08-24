@@ -77,7 +77,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     <form onSubmit={handleSubmit} className="rounded-md bg-white p-2">
       {clientSecret && <PaymentElement />}
       {errorMessage && <div>{errorMessage}</div>}
-      <Button> {!loading ? `Pay ${amount}` : "Processing..."}</Button>
+      <Button className="mt-4"> {!loading ? `Pay ${amount}` : "Processing..."}</Button>
     </form>
   );
 };

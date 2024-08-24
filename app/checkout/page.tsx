@@ -23,11 +23,11 @@ const Checkout: React.FC = () => {
 
   return (
     <AppWrapper>
-      <div className="container mx-auto grid grid-cols-3 gap-8 px-4 py-8">
-        <div className="col-span-2">
+      <div className="container mx-auto grid md:grid-cols-3 gap-8 px-4 py-8">
+        <div className="md:col-span-2">
           <AddressForm title="Address Form" />
         </div>
-        <div className="col-span-1">
+        <div className="md:col-span-1">
           <OrderSummary
             subtotal={subtotal}
             shippingCharge={shippingCharge}

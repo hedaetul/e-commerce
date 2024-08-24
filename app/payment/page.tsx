@@ -35,8 +35,8 @@ const PaymentPage: React.FC = () => {
 
   return (
     <AppWrapper>
-      <div className="container mx-auto grid grid-cols-3 gap-8 px-4 py-8">
-        <div className="col-span-2">
+      <div className="container mx-auto grid md:grid-cols-3 gap-8 px-4 py-8">
+        <div className="md:col-span-2">
           <Elements
             stripe={stripePromise}
             options={{
@@ -48,7 +48,7 @@ const PaymentPage: React.FC = () => {
             <CheckoutForm amount={amount} />
           </Elements>
         </div>
-        <div className="col-span-1">
+        <div className="md:col-span-1">
           <div className="h-fit rounded-lg bg-white p-6 shadow-lg">
             <h1 className="mb-6 text-2xl font-bold">Order Summary</h1>
             <div className="space-y-4">
