@@ -62,14 +62,14 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="w-screen shadow-lg">
-      <div className="sticky top-0 container flex flex-col justify-between">
-        <div className="flex relative h-[5rem] items-center justify-between">
+      <div className="container flex flex-col justify-between">
+        <div className="relative flex h-[5rem] items-center justify-between">
           <Link href="/" className="icon-7 flex items-center">
             Bajar
           </Link>
 
           {/* Search bar and user icon for larger screens */}
-          <div className=" w-[300px] md:ml-4 md:block md:w-[660px]">
+          <div className="w-[300px] relative md:ml-4 md:block md:w-[660px]">
             <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 transform text-lg text-gray-400" />
             <input
               type="text"
