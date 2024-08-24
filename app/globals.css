@@ -124,7 +124,7 @@
 .bg-image-1 {
   background-image: url("/banner-1.jpg");
   background-size: cover;
-  background-position: cover;
+  background-position: center;
 }
 
 .bg-image-1-0 {
@@ -136,13 +136,13 @@
 .bg-image-2 {
   background-image: url("/banner-2.jpg");
   background-size: cover;
-  background-position: cover;
+  background-position: center;
 }
 
 .bg-image-3 {
   background-image: url("/banner-3.jpg");
   background-size: cover;
-  background-position: cover;
+  background-position: center;
 }
 
 .shadow-btm {
