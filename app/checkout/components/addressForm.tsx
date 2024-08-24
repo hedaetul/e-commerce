@@ -2,15 +2,7 @@
 
 import AuthForm from "@/components/layout/authForm";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
@@ -19,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import AddressFormField from "./addressFormField"; 
 
 const AddressSchema = z.object({
   fullName: z.string().min(1, "Full Name is required"),
@@ -88,7 +81,6 @@ const AddressForm = ({ title }: { title: string }) => {
     <>
       <div className="rounded-lg bg-white px-6">
         <h1 className="mb-6 text-2xl font-bold">{title}</h1>
-
         <div className="w-full">
           <Form {...form}>
             <form
@@ -96,167 +88,63 @@ const AddressForm = ({ title }: { title: string }) => {
               className="grid grid-cols-1 gap-6 md:grid-cols-2"
             >
               <div className="flex flex-col gap-4">
-                <FormField
+                <AddressFormField
                   control={control}
                   name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="fullName"
-                          type="text"
-                          placeholder="Enter your Full name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.fullName?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Full Name"
+                  placeholder="Enter your Full name"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="phoneNumber"
-                          type="text"
-                          placeholder="Enter your Phone Number"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.phoneNumber?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Phone Number"
+                  placeholder="Enter your Phone Number"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="zipCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Zip Code</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="zipCode"
-                          type="text"
-                          placeholder="Enter your zip code"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.zipCode?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Zip Code"
+                  placeholder="Enter your zip code"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="address1"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address 1</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="address1"
-                          type="text"
-                          placeholder="Enter your Address-1"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.address1?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Address 1"
+                  placeholder="Enter your Address-1"
+                  errors={formState.errors}
                 />
               </div>
               <div className="flex flex-col gap-4">
-                <FormField
+                <AddressFormField
                   control={control}
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="email"
-                          type="text"
-                          placeholder="Enter your email address"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.email?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Email"
+                  placeholder="Enter your email address"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="company"
-                          type="text"
-                          placeholder="Enter your company name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.company?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Company"
+                  placeholder="Enter your company name"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="country"
-                          type="text"
-                          placeholder="Enter your country name"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.country?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Country"
+                  placeholder="Enter your country name"
+                  errors={formState.errors}
                 />
-                <FormField
+                <AddressFormField
                   control={control}
                   name="address2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address 2</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="address2"
-                          type="text"
-                          placeholder="Enter your Address-2"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {formState.errors.address2?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
+                  label="Address 2"
+                  placeholder="Enter your Address-2"
+                  errors={formState.errors}
                 />
               </div>
             </form>
@@ -265,11 +153,7 @@ const AddressForm = ({ title }: { title: string }) => {
             <Button className="w-full" variant="outline">
               Back to cart
             </Button>
-            <Button
-              className="w-full"
-              onClick={() => handleSubmit(onSubmit)()}
-              type="submit"
-            >
+            <Button className="w-full" onClick={() => handleSubmit(onSubmit)()} type="submit">
               Place Order
             </Button>
           </div>
