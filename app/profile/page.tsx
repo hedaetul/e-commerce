@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AppWrapper from "../AppWrapper";
 
@@ -36,7 +36,6 @@ const ProfilePage: React.FC = () => {
 
   const { displayName, email, photoURL } = user;
 
-  // Dummy data for orders (replace with real data from your API)
   const orders = [
     { id: "12345", date: "2024-08-01", total: 99.99, status: "Shipped" },
     { id: "67890", date: "2024-07-15", total: 49.99, status: "Delivered" },
@@ -46,7 +45,7 @@ const ProfilePage: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/"); // Redirect to home page after logout
+      router.push("/");
     } catch (error) {
       console.error("Logout failed", error);
     }
@@ -55,7 +54,6 @@ const ProfilePage: React.FC = () => {
   return (
     <AppWrapper>
       <div className="container mx-auto px-4 py-8">
-        {/* Profile Header */}
         <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
           <div className="flex items-center space-x-6">
             <div className="relative h-24 w-24">
@@ -84,7 +82,6 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Orders Card */}
         <div className="rounded-lg bg-white p-6 shadow-md">
           <h2 className="mb-4 text-2xl font-semibold">Previous Orders</h2>
           <div className="space-y-4">
