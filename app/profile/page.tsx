@@ -1,19 +1,37 @@
 // src/pages/profile.tsx
 "use client";
 
+import AuthForm from "@/components/layout/authForm";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import { useState } from "react";
 import AppWrapper from "../AppWrapper";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
+  const [showAuthForm, setShowAuthForm] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleAuthClose = () => {
+    setShowAuthForm(false);
+    setErrorMessage("");
+  };
 
   if (!user) {
-    return <p>Loading...</p>; // Handle the loading state or redirect to login page
+    return (
+      showAuthForm && (
+        <AuthForm
+          isLogin={isLogin}
+          toggleLoginSignup={() => setIsLogin(!isLogin)}
+          setError={setErrorMessage}
+          onClose={handleAuthClose}
+        />
+      )
+    );
   }
 
   const { displayName, email, photoURL } = user;
