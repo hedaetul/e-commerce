@@ -17,13 +17,22 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("card");
   const [paypalEmail, setPaypalEmail] = useState("");
-  const { setAddFormData, clearCart } = useCart();
+
+  const {
+    setAddFormData,
+    clearCart,
+    selectedPaymentMethod,
+    setSelectedPaymentMethod,
+    successMessage,
+    setSuccessMessage,
+  } = useCart();
   const router = useRouter();
 
+  console.log(selectedPaymentMethod);
+
   useEffect(() => {
-    if (selectedTab === "card") {
+    if (selectedPaymentMethod === "credit-card") {
       fetch("/api/create-payment-intent", {
         method: "POST",
         headers: {
@@ -38,7 +47,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
           setErrorMessage("Failed to load payment details.");
         });
     }
-  }, [amount, selectedTab]);
+  }, [amount, selectedPaymentMethod]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,7 +60,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     }
 
     try {
-      if (selectedTab === "card") {
+      if (selectedPaymentMethod === "credit-card") {
         // Confirm the payment
         const { error } = await stripe.confirmPayment({
           elements,
@@ -60,37 +69,22 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
             return_url: `${window.location.origin}/confirmation`,
           },
         });
+        setSuccessMessage(true);
 
         if (error) {
           setErrorMessage(error.message || "An error occurred.");
         } else {
-          // Payment succeeded
-          setAddFormData({
-            paymentMethod: "card",
-            status: "paid",
-          });
           clearCart();
-          router.push("/confirmation"); // Redirect to confirmation page
+          router.push("/confirmation");
         }
-      } else if (selectedTab === "paypal") {
-        // Handle PayPal payment
-        console.log("Proceeding with PayPal payment with email:", paypalEmail);
-        setAddFormData({
-          paymentMethod: "paypal",
-          email: paypalEmail,
-          status: "pending",
-        });
+      } else if (selectedPaymentMethod === "paypal") {
         clearCart();
-        window.location.href = "/confirmation"; // Redirect to confirmation page
-      } else if (selectedTab === "cod") {
-        // Handle Cash on Delivery
-        console.log("Order placed with Cash on Delivery.");
-        setAddFormData({
-          paymentMethod: "cod",
-          status: "cod",
-        });
+        window.location.href = "/confirmation";
+        setSuccessMessage(true);
+      } else if (selectedPaymentMethod === "cash-on-delivery") {
         clearCart();
-        window.location.href = "/confirmation"; // Redirect to confirmation page
+        window.location.href = "/confirmation";
+        setSuccessMessage(true);
       }
     } catch (error) {
       console.error("Error processing payment:", error);
@@ -107,34 +101,42 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
         <button
           type="button"
           className={`flex-1 px-4 py-2 text-center ${
-            selectedTab === "card" ? "bg-blue-500 text-white" : "bg-gray-200"
+            selectedPaymentMethod === "credit-card"
+              ? "bg-rose-500 text-white"
+              : "bg-gray-200"
           }`}
-          onClick={() => setSelectedTab("card")}
+          onClick={() => setSelectedPaymentMethod("credit-card")}
         >
           Credit/Debit Card
         </button>
         <button
           type="button"
           className={`flex-1 px-4 py-2 text-center ${
-            selectedTab === "paypal" ? "bg-blue-500 text-white" : "bg-gray-200"
+            selectedPaymentMethod === "paypal"
+              ? "bg-rose-500 text-white"
+              : "bg-gray-200"
           }`}
-          onClick={() => setSelectedTab("paypal")}
+          onClick={() => setSelectedPaymentMethod("paypal")}
         >
           PayPal
         </button>
         <button
           type="button"
           className={`flex-1 px-4 py-2 text-center ${
-            selectedTab === "cod" ? "bg-blue-500 text-white" : "bg-gray-200"
+            selectedPaymentMethod === "cash-on-delivery"
+              ? "bg-rose-500 text-white"
+              : "bg-gray-200"
           }`}
-          onClick={() => setSelectedTab("cod")}
+          onClick={() => setSelectedPaymentMethod("cash-on-delivery")}
         >
           Cash on Delivery
         </button>
       </div>
 
-      {selectedTab === "card" && clientSecret && <PaymentElement />}
-      {selectedTab === "paypal" && (
+      {selectedPaymentMethod === "credit-card" && clientSecret && (
+        <PaymentElement />
+      )}
+      {selectedPaymentMethod === "paypal" && (
         <div className="mb-4">
           <label className="mb-2 block font-medium">PayPal Email</label>
           <input
@@ -146,11 +148,11 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
           />
         </div>
       )}
-      {selectedTab === "cod" && (
+      {selectedPaymentMethod === "cash-on-delivery" && (
         <p className="mb-4">You have selected Cash on Delivery.</p>
       )}
 
-      {selectedTab === "card" && errorMessage && (
+      {selectedPaymentMethod === "credit-card" && errorMessage && (
         <div className="mb-4 text-red-500">{errorMessage}</div>
       )}
       <Button className="mt-4">

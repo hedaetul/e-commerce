@@ -3,7 +3,14 @@
 import { auth, firestore } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type CartItem = {
   id: string;
@@ -24,16 +31,18 @@ type CartContextType = {
   discount: number;
   totalAmount: number;
   selectedPaymentMethod: string;
+  setSelectedPaymentMethod: Dispatch<SetStateAction<string>>;
   updateSubtotal: (amount: number) => void;
   updateShippingCharge: (amount: number) => void;
   updateTax: (amount: number) => void;
   updateDiscount: (amount: number) => void;
-  updateSelectedPaymentMethod: (method: string) => void;
   clearCart: () => void;
   addFormData: Record<string, any>;
   setAddFormData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
   saveOrderData: () => Promise<void>;
   orderData: object | null;
+  successMessage: boolean;
+  setSuccessMessage: Dispatch<SetStateAction<boolean>>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -72,13 +81,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
     () => {
       const savedPaymentMethod = localStorage.getItem("selectedPaymentMethod");
-      return savedPaymentMethod ? savedPaymentMethod : "credit-card";
+      return savedPaymentMethod ? savedPaymentMethod : "";
     },
   );
 
   const [addFormData, setAddFormData] = useState<Record<string, any>>({});
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [orderData, setOrderData] = useState<object | null>(null);
+  const [successMessage, setSuccessMessage] = useState(false);
 
   const router = useRouter();
 
@@ -140,12 +150,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setDiscount(amount);
   };
 
-  const updateSelectedPaymentMethod = (method: string) => {
-    setSelectedPaymentMethod(method);
-  };
-
   const clearCart = () => {
-    setCartItems([]);
     localStorage.removeItem("cartItems");
   };
 
@@ -179,7 +184,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
           doc(firestore, "users", userId, "orders", orderId),
           orderData,
         );
-        setOrderData(orderData); // Save orderData to state
+        setOrderData(orderData); 
         router.push(`/confirmation?orderId=${orderId}`);
       } catch (error) {
         console.error("Error saving order to Firestore:", error);
@@ -201,16 +206,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         discount,
         totalAmount,
         selectedPaymentMethod,
+        setSelectedPaymentMethod,
         updateSubtotal,
         updateShippingCharge,
         updateTax,
         updateDiscount,
-        updateSelectedPaymentMethod,
         clearCart,
         addFormData,
         setAddFormData,
         saveOrderData,
         orderData,
+        successMessage,
+        setSuccessMessage,
       }}
     >
       {children}
