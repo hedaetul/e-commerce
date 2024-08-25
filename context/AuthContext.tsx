@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       name: user.displayName || "",
       email: user.email || "",
       photoUrl: user.photoURL || "",
-      loginMethod: user.providerData[0].providerId, // e.g., "google.com" or "password"
+      loginMethod: user.providerData[0].providerId, 
     };
     await setDoc(userRef, { personalInformation: userData }, { merge: true });
   };
