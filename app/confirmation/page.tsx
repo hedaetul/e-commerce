@@ -48,7 +48,7 @@ const ConfirmationPage: React.FC = () => {
     
   }, [searchParams]);
 
-  if (successMessage === true) {
+  if (successMessage === false) {
     return <p>Loading...</p>;
   } else {
     const {

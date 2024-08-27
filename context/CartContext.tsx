@@ -1,27 +1,54 @@
-// CartProvider.tsx
-
 "use client";
 
-import React, { createContext, useState, useEffect, ReactNode, useContext } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { CartContextType, CartItem } from "./cartTypes";
-import { calculateSubtotal, loadFromLocalStorage, saveToLocalStorage } from "./cartUtils";
+import {
+  calculateSubtotal,
+  loadFromLocalStorage,
+  saveToLocalStorage,
+} from "./cartUtils";
 import { useOrderManagement } from "./useOrderManagement";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => loadFromLocalStorage("cartItems", []));
-  const [subtotal, setSubtotal] = useState<number>(calculateSubtotal(cartItems));
-  const [shippingCharge, setShippingCharge] = useState<number>(() => loadFromLocalStorage("shippingCharge", 0));
-  const [tax, setTax] = useState<number>(() => loadFromLocalStorage("tax", 0));
-  const [discount, setDiscount] = useState<number>(() => loadFromLocalStorage("discount", 0));
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(() => loadFromLocalStorage("selectedPaymentMethod", ""));
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [cartItems, setCartItems] = useState<CartItem[]>(() =>
+    loadFromLocalStorage("cartItems", []),
+  );
+  const [subtotal, setSubtotal] = useState<number>(
+    calculateSubtotal(cartItems),
+  );
+  const [shippingCharge, setShippingCharge] = useState<number>(() =>
+    loadFromLocalStorage("shippingCharge", 12),
+  );
+  const [tax, setTax] = useState<number>(() => loadFromLocalStorage("tax", 3));
+  const [discount, setDiscount] = useState<number>(() =>
+    loadFromLocalStorage("discount", 5),
+  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    () => loadFromLocalStorage("selectedPaymentMethod", ""),
+  );
   const [addFormData, setAddFormData] = useState<Record<string, any>>({});
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [successMessage, setSuccessMessage] = useState<boolean>(false);
 
   const { saveOrderData, orderData } = useOrderManagement({
-    cartItems, subtotal, shippingCharge, tax, discount, totalAmount, addFormData, selectedPaymentMethod
+    cartItems,
+    subtotal,
+    shippingCharge,
+    tax,
+    discount,
+    totalAmount,
+    addFormData,
+    selectedPaymentMethod,
   });
 
   useEffect(() => {
@@ -40,8 +67,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod]);
 
   const addToCart = (item: CartItem) => {
-    setCartItems(prevItems => {
-      const itemIndex = prevItems.findIndex(cartItem => cartItem.id === item.id);
+    setCartItems((prevItems) => {
+      const itemIndex = prevItems.findIndex(
+        (cartItem) => cartItem.id === item.id,
+      );
       if (itemIndex >= 0) {
         const newItems = [...prevItems];
         newItems[itemIndex].quantity += item.quantity;
@@ -52,12 +81,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeFromCart = (id: string) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
-    setCartItems(prevItems =>
-      prevItems.map(item => item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item)
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item,
+      ),
     );
   };
 
@@ -69,9 +100,24 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return (
     <CartContext.Provider
       value={{
-        cartItems, addToCart, removeFromCart, updateQuantity, subtotal, shippingCharge, tax, discount,
-        totalAmount, selectedPaymentMethod, setSelectedPaymentMethod, clearCart, addFormData, setAddFormData,
-        saveOrderData, orderData, successMessage, setSuccessMessage
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        subtotal,
+        shippingCharge,
+        tax,
+        discount,
+        totalAmount,
+        selectedPaymentMethod,
+        setSelectedPaymentMethod,
+        clearCart,
+        addFormData,
+        setAddFormData,
+        saveOrderData,
+        orderData,
+        successMessage,
+        setSuccessMessage,
       }}
     >
       {children}

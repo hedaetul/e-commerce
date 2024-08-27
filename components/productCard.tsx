@@ -18,22 +18,22 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
-    <div className="transform rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500">
+    <div className="transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500">
       <div className="cover h-fit w-full rounded-t-lg">
         <Image
           src={product.photo}
           alt={product.name}
           objectFit="cover"
-          className="object-cover w-full h-auto"
+          className="h-auto w-full object-cover"
           width={400}
           height={400}
         />
       </div>
-      <div className="p-4 md:p-6 text-center">
-        <h2 className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap text-lg md:text-xl font-semibold text-gray-800">
+      <div className="p-4 text-center md:p-6">
+        <h2 className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-gray-800 md:text-xl">
           {product.name}
         </h2>
-        <p className="mb-2 text-md md:text-lg font-semibold text-red-500">
+        <p className="text-md mb-2 font-semibold text-red-500 md:text-lg">
           ${product.price.toFixed(2)}
         </p>
         <p className="mb-4 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-600">
@@ -42,7 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 
         <Button
           variant="outline"
-          className="w-full rounded-md px-4 md:px-6 py-2 transition-colors duration-300 ease-in-out hover:border-gray-500"
+          className="w-full rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:border-gray-500 md:px-6"
           onClick={() => onAddToCart(product)}
         >
           <FaShoppingCart className="mr-2" />
