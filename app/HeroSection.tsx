@@ -19,7 +19,7 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 
-import { Product } from "@/components/productCard";
+import { Product } from "@/data/product";
 
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
