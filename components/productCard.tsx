@@ -1,24 +1,27 @@
 import { Button } from "@/components/ui/button";
+import { Product } from "@/data/product";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
 
-export interface Product {
-  id: string;
-  name: string;
-  photo: string;
-  price: number;
-  description: string;
-}
-
-interface ProductCardProps {
+type ProductCardProps = {
   product: Product;
   onAddToCart: (product: Product) => void;
-}
+};
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+  const route = useRouter();
+
+  const handleProductClick = () => {
+    route.push(`/product_details?id=${product.id}`);
+  };
+
   return (
-    <div className="transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500">
+    <div
+      onClick={handleProductClick}
+      className="transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500"
+    >
       <div className="cover h-fit w-full rounded-t-lg">
         <Image
           src={product.photo}
@@ -43,7 +46,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         <Button
           variant="outline"
           className="w-full rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:border-gray-500 md:px-6"
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart(product);
+          }}
         >
           <FaShoppingCart className="mr-2" />
           Add to Cart
