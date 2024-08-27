@@ -7,18 +7,21 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const StripePayment = ({ amount }: { amount: number }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchClientSecret = async () => {
+      setLoading(true);
       try {
         const res = await fetch("/api/create-payment-intent", {
           method: "POST",
@@ -64,8 +67,8 @@ const StripePayment = ({ amount }: { amount: number }) => {
       if (error) {
         setErrorMessage(error.message || "An error occurred.");
       } else {
-        // Handle successful payment
-        console.log("Payment successful");
+        setErrorMessage(null);
+        router.push("/confirmation");
       }
     } catch (error) {
       setErrorMessage("An error occurred during payment.");

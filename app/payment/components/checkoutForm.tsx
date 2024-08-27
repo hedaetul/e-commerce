@@ -15,7 +15,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [paypalEmail, setPaypalEmail] = useState("");
 
@@ -28,8 +28,6 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     setSuccessMessage,
   } = useCart();
   const router = useRouter();
-
-  console.log(selectedPaymentMethod);
 
   useEffect(() => {
     if (selectedPaymentMethod === "credit-card") {
@@ -61,7 +59,20 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
 
     try {
       if (selectedPaymentMethod === "credit-card") {
-        // Confirm the payment
+        if (!clientSecret) {
+          setErrorMessage("Payment intent not initialized properly.");
+          setLoading(false);
+          return;
+        }
+
+        const submitResponse = await elements.submit();
+
+        if (submitResponse.error) {
+          setErrorMessage(submitResponse.error.message);
+          setLoading(false);
+          return;
+        }
+
         const { error } = await stripe.confirmPayment({
           elements,
           clientSecret,
@@ -69,12 +80,12 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
             return_url: `${window.location.origin}/confirmation`,
           },
         });
-        setSuccessMessage(true);
 
         if (error) {
           setErrorMessage(error.message || "An error occurred.");
         } else {
           clearCart();
+          setSuccessMessage(true);
           router.push("/confirmation");
         }
       } else if (selectedPaymentMethod === "paypal") {
@@ -152,11 +163,14 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
         <p className="mb-4">You have selected Cash on Delivery.</p>
       )}
 
-      {selectedPaymentMethod === "credit-card" && errorMessage && (
-        <div className="mb-4 text-red-500">{errorMessage}</div>
-      )}
-      <Button className="mt-4">
-        {!loading ? `Pay ${amount}` : "Processing..."}
+      {errorMessage && <div className="mb-4 text-red-500">{errorMessage}</div>}
+
+      <Button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-rose-500 px-4 py-2 text-white"
+      >
+        {loading ? "Processing..." : "Pay Now"}
       </Button>
     </form>
   );

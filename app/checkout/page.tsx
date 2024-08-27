@@ -9,17 +9,14 @@ import OrderSummary from "./components/orderSummary";
 
 const Checkout: React.FC = () => {
   const router = useRouter();
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, clearCart,totalAmount,tax,shippingCharge,discount } = useCart();
 
   const [subtotal, setSubtotal] = useState(() => {
     const savedSubtotal = localStorage.getItem("subtotal");
     return savedSubtotal ? parseFloat(savedSubtotal) : 100;
   });
-  const [shippingCharge, setShippingCharge] = useState(10);
-  const [tax, setTax] = useState(8);
-  const [discount, setDiscount] = useState(5);
+ 
 
-  const total = subtotal + shippingCharge + tax - discount;
 
   return (
     <AppWrapper>
@@ -33,7 +30,7 @@ const Checkout: React.FC = () => {
             shippingCharge={shippingCharge}
             tax={tax}
             discount={discount}
-            total={total}
+            total={totalAmount}
           />
         </div>
       </div>
