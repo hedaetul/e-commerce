@@ -26,6 +26,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     setSelectedPaymentMethod,
     successMessage,
     setSuccessMessage,
+    cartItems,
   } = useCart();
   const router = useRouter();
 
@@ -86,16 +87,14 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
         } else {
           clearCart();
           setSuccessMessage(true);
-          router.push("/confirmation");
+          window.location.href = "/confirmation";
         }
       } else if (selectedPaymentMethod === "paypal") {
         clearCart();
-        window.location.href = "/confirmation";
         setSuccessMessage(true);
+        window.location.href = "/confirmation";
       } else if (selectedPaymentMethod === "cash-on-delivery") {
-        clearCart();
-        window.location.href = "/confirmation";
-        setSuccessMessage(true);
+        successOrder("cash-on-delivery");
       }
     } catch (error) {
       console.error("Error processing payment:", error);
@@ -105,11 +104,29 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     }
   };
 
+  const successOrder = async (method: string) => {
+    try {
+      setSelectedPaymentMethod(method);
+
+      const hasItems = cartItems.length > 0;
+      if (hasItems) {
+        setSuccessMessage(true);
+      }
+      clearCart();
+      if (hasItems) {
+        window.location.href = "/confirmation";
+      }
+    } catch (error) {
+      console.error("Error processing order:", error);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="rounded-md bg-white p-4">
       <h2 className="mb-4 text-xl font-bold">Choose a payment method:</h2>
       <div className="mb-4 flex">
         <button
+          disabled
           type="button"
           className={`flex-1 px-4 py-2 text-center ${
             selectedPaymentMethod === "credit-card"
@@ -121,6 +138,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
           Credit/Debit Card
         </button>
         <button
+          disabled
           type="button"
           className={`flex-1 px-4 py-2 text-center ${
             selectedPaymentMethod === "paypal"
@@ -138,7 +156,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
               ? "bg-rose-500 text-white"
               : "bg-gray-200"
           }`}
-          onClick={() => setSelectedPaymentMethod("cash-on-delivery")}
+          onClick={() => successOrder("cash-on-delivery")}
         >
           Cash on Delivery
         </button>

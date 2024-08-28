@@ -2,53 +2,49 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import { auth } from "@/lib/firebase";
-import { fetchOrderData } from "@/lib/firebaseUtils";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const ConfirmationPage: React.FC = () => {
-  const [orderData, setOrderData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const searchParams = useSearchParams();
-  const { successMessage } = useCart();
-  console.log(successMessage);
-  console.log(orderData);
+  const { successMessage } = useCart(); 
 
-  
+  const [orderDetails, setOrderDetails] = useState<{
+    orderId: string;
+    date: Date;
+    subtotal: number;
+    shippingCharge: number;
+    tax: number;
+    discount: number;
+    totalAmount: number;
+    paymentMethod: string;
+    items: { id: string; name: string; price: number; quantity: number }[];
+  } | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!auth.currentUser) {
-        // Redirect or show an error if user is not logged in
-        // You might want to use router.push('/login') if handling redirects
-        return;
+    const orderDataString = localStorage.getItem("orderData");
+    if (orderDataString) {
+      try {
+        const parsedOrderData = JSON.parse(orderDataString);
+
+        const formattedDate = new Date(parsedOrderData.date.seconds * 1000);
+
+        setOrderDetails({
+          ...parsedOrderData,
+          date: formattedDate,
+        });
+
+        setLoading(false); 
+      } catch (error) {
+        console.error("Error parsing order data:", error);
       }
+    } else {
+      console.error("No order data found in localStorage.");
+    }
+  }, []);
 
-      const userId = auth.currentUser.uid;
-      const orderId = searchParams.get("orderId");
-      console.log(orderId);
-      
-
-      if (orderId) {
-        try {
-          const data = await fetchOrderData(userId, orderId);
-          setOrderData(data);
-        } catch (error) {
-          console.error("Error fetching order data:", error);
-          // Handle error state, maybe show an error message
-        }
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    
-  }, [searchParams]);
-
-  if (successMessage === false) {
+  if (loading || !orderDetails) {
     return <p>Loading...</p>;
   } else {
     const {
@@ -61,19 +57,9 @@ const ConfirmationPage: React.FC = () => {
       totalAmount,
       paymentMethod,
       items,
-    } = orderData as {
-      orderId: string;
-      date: { toDate: () => Date };
-      subtotal: number;
-      shippingCharge: number;
-      tax: number;
-      discount: number;
-      totalAmount: number;
-      paymentMethod: string;
-      items: { id: string; name: string; price: number; quantity: number }[];
-    };
+    } = orderDetails;
 
-    const formattedDate = format(date.toDate(), "MMMM dd, yyyy");
+    const formattedDate = format(date, "MMMM dd, yyyy");
 
     return (
       <div className="container mx-auto px-4 py-8">

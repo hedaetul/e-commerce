@@ -63,8 +63,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     saveToLocalStorage("tax", tax);
     saveToLocalStorage("discount", discount);
     saveToLocalStorage("totalAmount", newTotalAmount);
-    saveToLocalStorage("selectedPaymentMethod", selectedPaymentMethod);
-  }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod]);
+    saveToLocalStorage("selectedPaymentMethod", 'cash-on-delivery');
+    saveToLocalStorage("orderData", orderData)
+  }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod,orderData]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {

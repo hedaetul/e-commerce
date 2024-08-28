@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CartItem } from "./cartTypes";
 
-type OrderManagementProps = {
+export type OrderManagementProps = {
   cartItems: CartItem[];
   subtotal: number;
   shippingCharge: number;
@@ -26,6 +26,8 @@ export const useOrderManagement = ({
   selectedPaymentMethod,
 }: OrderManagementProps) => {
   const [orderData, setOrderData] = useState<object | null>(null);
+  console.log(orderData);
+  
   const router = useRouter();
 
   const saveOrderData = async () => {
