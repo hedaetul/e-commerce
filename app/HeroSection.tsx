@@ -24,6 +24,7 @@ import { Product } from "@/data/product";
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
 
+
   const handleAddToCart = (product: Product) => {
     addToCart({ ...product, quantity: 1 });
   };
@@ -45,10 +46,10 @@ const HeroSection: React.FC = () => {
                     </h1>
                     <h2 className="text-[24px] font-semibold uppercase text-gray-800 lg:text-[30px]">
                       Sale up to{" "}
-                      <span className="text-base text-rose-700">30% off</span>
+                      <span className="text-base text-rose-500">30% off</span>
                     </h2>
                     <h4 className="text-lg text-gray-700 lg:text-lg">
-                      Get free shipping on orders over $99.00
+                      Get free shipping on orders over <span className="text-green-500">$99.00</span>
                     </h4>
                     <Button className="mt-4 lg:mt-8">Shop now</Button>
                   </div>
@@ -64,11 +65,11 @@ const HeroSection: React.FC = () => {
                     </h1>
                     <h2 className="text-[24px] font-semibold uppercase text-gray-800 lg:text-[30px]">
                       Sale up to{" "}
-                      <span className="text-base text-rose-700">40% off</span>
+                      <span className="text-base text-rose-500">40% off</span>
                     </h2>
                     <h4 className="text-lg text-gray-700 lg:text-lg">
                       Get free shipping on orders over{" "}
-                      <span className="block">$99.00</span>
+                      <span className="block text-green-500">$99.00</span>
                     </h4>
                     <Button className="mt-4 lg:mt-8">Shop now</Button>
                   </div>

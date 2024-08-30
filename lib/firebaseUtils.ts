@@ -1,20 +1,22 @@
-// lib/firestoreUtils.ts
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { firestore } from "./firebase";
 
-import { firestore } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
-
-export const fetchOrderData = async (userId: string, orderId: string) => {
+const getLatestOrder = async (userId: string) => {
   try {
-    const docRef = doc(firestore, "users", userId, "orders", orderId);
-    const docSnap = await getDoc(docRef);
+    const ordersRef = collection(firestore, "users", userId, "orders");
+    const q = query(ordersRef, orderBy("date", "desc"), limit(1));
+    const querySnapshot = await getDocs(q);
 
-    if (docSnap.exists()) {
-      return docSnap.data();
-    } else {
-      throw new Error("No such document!");
+    if (querySnapshot.empty) {
+      throw new Error("No orders found!");
     }
+
+    const orderDoc = querySnapshot.docs[0];
+    return { id: orderDoc.id, ...orderDoc.data() };
   } catch (error) {
-    console.error("Error fetching order data:", error);
-    throw new Error("Error fetching order data");
+    console.error("Error fetching the latest order:", error);
+    throw error;
   }
 };
+
+export default getLatestOrder;

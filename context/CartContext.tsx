@@ -39,6 +39,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const [addFormData, setAddFormData] = useState<Record<string, any>>({});
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [successMessage, setSuccessMessage] = useState<boolean>(false);
+  console.log(successMessage);
+  
 
   const { saveOrderData, orderData } = useOrderManagement({
     cartItems,
@@ -64,8 +66,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     saveToLocalStorage("discount", discount);
     saveToLocalStorage("totalAmount", newTotalAmount);
     saveToLocalStorage("selectedPaymentMethod", 'cash-on-delivery');
-    saveToLocalStorage("orderData", orderData)
-  }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod,orderData]);
+  }, [cartItems, shippingCharge, tax, discount, selectedPaymentMethod]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
@@ -116,7 +117,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         addFormData,
         setAddFormData,
         saveOrderData,
-        orderData,
         successMessage,
         setSuccessMessage,
       }}

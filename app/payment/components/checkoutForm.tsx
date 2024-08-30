@@ -26,7 +26,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
     setSelectedPaymentMethod,
     successMessage,
     setSuccessMessage,
-    cartItems,
+    cartItems, saveOrderData
   } = useCart();
   const router = useRouter();
 
@@ -106,13 +106,24 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
 
   const successOrder = async (method: string) => {
     try {
+      // Step 1: Set the selected payment method
       setSelectedPaymentMethod(method);
-
+      console.log('entered');
+  
+      // Step 2: Check if there are items in the cart
       const hasItems = cartItems.length > 0;
+  
+      // Step 3: Set the success message based on the cart's content
       if (hasItems) {
         setSuccessMessage(true);
+      } else {
+        setSuccessMessage(true);
       }
+  
+      // Step 4: Clear the cart
       clearCart();
+  
+      // Step 5: Redirect to the confirmation page if the cart had items
       if (hasItems) {
         window.location.href = "/confirmation";
       }
@@ -120,6 +131,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
       console.error("Error processing order:", error);
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="rounded-md bg-white p-4">
@@ -156,7 +168,7 @@ const CheckoutForm = ({ amount }: { amount: number }) => {
               ? "bg-rose-500 text-white"
               : "bg-gray-200"
           }`}
-          onClick={() => successOrder("cash-on-delivery")}
+          onClick={() => saveOrderData}
         >
           Cash on Delivery
         </button>

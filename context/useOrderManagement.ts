@@ -2,7 +2,8 @@ import { auth, firestore } from "@/lib/firebase";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CartItem } from "./cartTypes";
+import { CartItem, OrderData } from "./cartTypes";
+import { saveToLocalStorage } from "./cartUtils";
 
 export type OrderManagementProps = {
   cartItems: CartItem[];
@@ -25,10 +26,10 @@ export const useOrderManagement = ({
   addFormData,
   selectedPaymentMethod,
 }: OrderManagementProps) => {
-  const [orderData, setOrderData] = useState<object | null>(null);
-  console.log(orderData);
-  
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
+
   const router = useRouter();
+  const [successMessage, setSuccessMessage] = useState<boolean>(false);
 
   const saveOrderData = async () => {
     if (!auth.currentUser) {
@@ -38,7 +39,7 @@ export const useOrderManagement = ({
     const orderId = new Date().toISOString();
     const userId = auth.currentUser.uid;
 
-    const orderData = {
+    const orderData: OrderData = {
       orderId,
       date: Timestamp.now(),
       subtotal,
@@ -57,12 +58,16 @@ export const useOrderManagement = ({
     };
 
     try {
-      await setDoc(doc(firestore, "users", userId, "orders", orderId), orderData);
+      await setDoc(
+        doc(firestore, "users", userId, "orders", orderId),
+        orderData,
+      );
       setOrderData(orderData);
+      saveToLocalStorage("orderId", orderId);
       router.push(`/confirmation?orderId=${orderId}`);
+      setSuccessMessage(true);
     } catch (error) {
       console.error("Error saving order to Firestore:", error);
-      throw new Error("Error saving order to Firestore");
     }
   };
 
