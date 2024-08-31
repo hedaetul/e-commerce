@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import Confirmed from "@/dist/images/confirmed.png";
-import getLatestOrder from "@/lib/firebaseUtils";
+import { getLatestOrder } from "@/lib/firebaseUtils";
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,7 +44,7 @@ const ConfirmationPage: React.FC = () => {
     return <p>Error: {error}</p>;
   }
 
-  if (!orderDetails ) {
+  if (!orderDetails) {
     return <p>Order details not found.</p>;
   }
 

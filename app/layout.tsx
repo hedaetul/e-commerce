@@ -1,5 +1,5 @@
 import { AuthProvider } from "@/context/AuthContext";
-import { CartProvider } from "@/context/CartContext"; 
+import { CartProvider } from "@/context/CartContext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
