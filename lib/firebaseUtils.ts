@@ -9,6 +9,13 @@ import {
 } from "firebase/firestore";
 import { auth, firestore } from "./firebase";
 
+interface Order {
+  orderId: string;
+  date: string;
+  subtotal: number;
+  totalAmount: number;
+}
+
 const getLatestOrder = async (userId: string) => {
   try {
     const ordersRef = collection(firestore, "users", userId, "orders");
@@ -20,7 +27,10 @@ const getLatestOrder = async (userId: string) => {
     }
 
     const orderDoc = querySnapshot.docs[0];
-    return { id: orderDoc.id, ...orderDoc.data() };
+    return {
+      orderId: orderDoc.id,
+      ...orderDoc.data(),
+    } as Order;
   } catch (error) {
     console.error("Error fetching the latest order:", error);
     throw error;
@@ -31,7 +41,6 @@ const getPersonalDetails = async () => {
   try {
     const userId = auth.currentUser?.uid;
     if (!userId) {
-      console.error("User not authenticated");
       throw new Error("User not authenticated");
     }
 
@@ -39,17 +48,14 @@ const getPersonalDetails = async () => {
     const detailsSnap = await getDoc(detailsRef);
 
     if (!detailsSnap.exists()) {
-      console.error("No personal details found for user:", userId);
-      throw new Error("No personal details found!");
+      throw new Error("No personal details found for user");
     }
 
     const personalDetails = detailsSnap.data()?.personalInformation;
     if (!personalDetails) {
-      console.error("Personal details are missing or undefined");
-      throw new Error("Personal details are missing!");
+      throw new Error("Personal details are missing or undefined");
     }
 
-    console.log("Fetched personal details:", personalDetails);
     return personalDetails;
   } catch (error) {
     console.error("Error fetching personal details:", error);
@@ -57,20 +63,29 @@ const getPersonalDetails = async () => {
   }
 };
 
-const countOrders = async () => {
+const fetchOrdersAndCount = async () => {
   try {
     const userId = auth.currentUser?.uid;
-    if (!userId) throw new Error("User not authenticated");
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
 
     const ordersRef = collection(firestore, "users", userId, "orders");
     const querySnapshot = await getDocs(ordersRef);
 
-    const numberOfOrders = querySnapshot.size;
-    return numberOfOrders;
+    const orders = querySnapshot.docs.map((doc) => ({
+      orderId: doc.id,
+      ...doc.data(),
+    }));
+
+    return {
+      numberOfOrders: orders.length,
+      orders,
+    };
   } catch (error) {
-    console.error("Error counting orders:", error);
-    throw error;
+    console.error("Error fetching orders and counting:", error);
+    return { numberOfOrders: 0, orders: [] };
   }
 };
 
-export { countOrders, getLatestOrder, getPersonalDetails };
+export { fetchOrdersAndCount, getLatestOrder, getPersonalDetails };

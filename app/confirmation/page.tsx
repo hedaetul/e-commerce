@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/custom/spinner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
@@ -37,7 +38,11 @@ const ConfirmationPage: React.FC = () => {
   }, [user]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="h-screen flex-col-center">
+        <Spinner />
+      </div>
+    );
   }
 
   if (error) {

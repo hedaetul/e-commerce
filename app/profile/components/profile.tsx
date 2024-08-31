@@ -3,7 +3,7 @@
 import Spinner from "@/components/custom/spinner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { countOrders, getPersonalDetails } from "@/lib/firebaseUtils";
+import { fetchOrdersAndCount, getPersonalDetails } from "@/lib/firebaseUtils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -40,8 +40,8 @@ const Profile = () => {
 
     const fetchOrderCount = async () => {
       try {
-        const count = await countOrders();
-        setOrderCount(count);
+        const { numberOfOrders } = await fetchOrdersAndCount();
+        setOrderCount(numberOfOrders);
         setError(null);
       } catch (error) {
         setError("Failed to count orders");
