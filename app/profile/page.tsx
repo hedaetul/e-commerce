@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AppWrapper from "../AppWrapper";
+import SideDashboard from "./components/sideDashboard";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -53,75 +54,80 @@ const ProfilePage: React.FC = () => {
 
   return (
     <AppWrapper>
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
-          <div className="flex items-center space-x-6">
-            <div className="relative h-24 w-24">
-              <Image
-                src={photoURL || "/default-user-icon.png"}
-                alt={displayName || "User Profile"}
-                fill
-                style={{ objectFit: "cover" }}
-                className="rounded-full"
-              />
-            </div>
-            <div>
-              <h1 className="mb-2 text-3xl font-semibold">
-                {displayName || "User"}
-              </h1>
-              <p className="text-gray-600">{email}</p>
-              <div className="mt-4">
-                <Link href="/edit-profile">
-                  <div className="cursor-pointer text-blue-500 hover:underline">
-                    Edit Profile
-                  </div>
-                </Link>
+      <div className="container mx-auto grid grid-cols-4 px-4 py-8">
+        <div className="col-span-1">
+          <SideDashboard />
+        </div>
+        <div className="col-span-3">
+          <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
+            <div className="flex items-center space-x-6">
+              <div className="relative h-24 w-24">
+                <Image
+                  src={photoURL || "/default-user-icon.png"}
+                  alt={displayName || "User Profile"}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  className="rounded-full"
+                />
               </div>
-              <Button onClick={handleLogout}>Logout</Button>
+              <div>
+                <h1 className="mb-2 text-3xl font-semibold">
+                  {displayName || "User"}
+                </h1>
+                <p className="text-gray-600">{email}</p>
+                <div className="mt-4">
+                  <Link href="/edit-profile">
+                    <div className="cursor-pointer text-blue-500 hover:underline">
+                      Edit Profile
+                    </div>
+                  </Link>
+                </div>
+                <Button onClick={handleLogout}>Logout</Button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="rounded-lg bg-white p-6 shadow-md">
-          <h2 className="mb-4 text-2xl font-semibold">Previous Orders</h2>
-          <div className="space-y-4">
-            {orders.length > 0 ? (
-              orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="rounded-lg border border-gray-200 p-4"
-                >
-                  <div className="mb-2 flex justify-between">
-                    <span className="font-medium">Order ID:</span>
-                    <span>{order.id}</span>
+          <div className="rounded-lg bg-white p-6 shadow-md">
+            <h2 className="mb-4 text-2xl font-semibold">Previous Orders</h2>
+            <div className="space-y-4">
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="rounded-lg border border-gray-200 p-4"
+                  >
+                    <div className="mb-2 flex justify-between">
+                      <span className="font-medium">Order ID:</span>
+                      <span>{order.id}</span>
+                    </div>
+                    <div className="mb-2 flex justify-between">
+                      <span className="font-medium">Date:</span>
+                      <span>{order.date}</span>
+                    </div>
+                    <div className="mb-2 flex justify-between">
+                      <span className="font-medium">Total:</span>
+                      <span>${order.total.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Status:</span>
+                      <span
+                        className={`font-medium ${
+                          order.status === "Shipped"
+                            ? "text-green-500"
+                            : order.status === "Delivered"
+                              ? "text-blue-500"
+                              : "text-yellow-500"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mb-2 flex justify-between">
-                    <span className="font-medium">Date:</span>
-                    <span>{order.date}</span>
-                  </div>
-                  <div className="mb-2 flex justify-between">
-                    <span className="font-medium">Total:</span>
-                    <span>${order.total.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Status:</span>
-                    <span
-                      className={`font-medium ${
-                        order.status === "Shipped"
-                          ? "text-green-500"
-                          : order.status === "Delivered"
-                            ? "text-blue-500"
-                            : "text-yellow-500"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No previous orders found.</p>
-            )}
+                ))
+              ) : (
+                <p>No previous orders found.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
