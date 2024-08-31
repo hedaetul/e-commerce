@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/custom/spinner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { countOrders, getPersonalDetails } from "@/lib/firebaseUtils";
@@ -14,7 +15,7 @@ const Profile = () => {
   const [orderCount, setOrderCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -62,11 +63,7 @@ const Profile = () => {
   }, [user]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-rose-500 border-t-transparent"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {

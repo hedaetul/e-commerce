@@ -19,6 +19,7 @@ import React, {
 
 interface AuthContextProps {
   user: User | null;
+  authLoading: boolean;
   loginWithEmail: (email: string, password: string) => Promise<void>;
   signupWithEmail: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -32,6 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [authLoading, setAuthLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -54,40 +56,70 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const loginWithEmail = async (email: string, password: string) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    if (userCredential.user) {
-      await saveUserData(userCredential.user);
+    setAuthLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      if (userCredential.user) {
+        await saveUserData(userCredential.user);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
   const signupWithEmail = async (email: string, password: string) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
-    if (userCredential.user) {
-      await saveUserData(userCredential.user);
+    setAuthLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      if (userCredential.user) {
+        await saveUserData(userCredential.user);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
   const loginWithGoogle = async () => {
-    const result = await signInWithPopup(auth, googleProvider);
-    if (result.user) {
-      await saveUserData(result.user);
+    setAuthLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result.user) {
+        await saveUserData(result.user);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
   const logout = async () => {
-    await auth.signOut();
+    setAuthLoading(true);
+    try {
+      await auth.signOut();
+      setUser(null);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const values: AuthContextProps = {
     user,
+    authLoading,
     loginWithEmail,
     signupWithEmail,
     loginWithGoogle,
