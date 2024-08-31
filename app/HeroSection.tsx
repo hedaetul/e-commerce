@@ -24,7 +24,6 @@ import { Product } from "@/data/product";
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
 
-
   const handleAddToCart = (product: Product) => {
     addToCart({ ...product, quantity: 1 });
   };
@@ -49,7 +48,8 @@ const HeroSection: React.FC = () => {
                       <span className="text-base text-rose-500">30% off</span>
                     </h2>
                     <h4 className="text-lg text-gray-700 lg:text-lg">
-                      Get free shipping on orders over <span className="text-green-500">$99.00</span>
+                      Get free shipping on orders over{" "}
+                      <span className="text-green-500">$99.00</span>
                     </h4>
                     <Button className="mt-4 lg:mt-8">Shop now</Button>
                   </div>
@@ -148,7 +148,7 @@ const HeroSection: React.FC = () => {
           Deals of the day
         </h1>
 
-        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard
               key={product.id}
