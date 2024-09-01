@@ -28,7 +28,7 @@ const PaymentMethods = () => {
       icon: <FaPaypal size={30} color="#003087" />,
       name: "Hedaetul Islam",
       details: "hedaetul.offical@gmail.com",
-      expiry: "",
+      expiry: "1212",
     },
     {
       icon: <FaCcVisa size={30} color="#1A1F71" />,
@@ -48,17 +48,21 @@ const PaymentMethods = () => {
           {methodsData.map((method, index) => (
             <div
               key={index}
-              className="mb-4 flex items-center justify-between rounded-lg bg-white p-4 shadow-md"
+              className="mb-4 grid grid-cols-5 rounded-lg bg-white p-4 shadow-md"
             >
-              <div className="flex items-center space-x-4">
+              <div className="col-span-4 flex items-center space-x-4">
                 <div>{method.icon}</div>
-                <div className="grid grid-cols-3 gap-24">
-                  <h4 className="font-medium">{method.name}</h4>
-                  <p className="text-sm text-gray-600">{method.details}</p>
-                  <p className="text-sm text-gray-600">{method.expiry}</p>
+                <div className="grid w-full grid-cols-3">
+                  <h4 className="col-span-1 font-medium">{method.name}</h4>
+                  <p className="col-span-1 text-sm text-gray-600">
+                    {method.details}
+                  </p>
+                  <p className="col-span-1 text-sm text-gray-600">
+                    {method.expiry}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="col-span-1 flex items-center justify-end space-x-2">
                 <button>
                   <AiFillEdit
                     className="text-gray-500 hover:text-blue-600"

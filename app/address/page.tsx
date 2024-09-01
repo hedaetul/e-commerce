@@ -44,14 +44,18 @@ const Address = () => {
           {addresses.map((address, index) => (
             <div
               key={index}
-              className="mb-4 flex items-center justify-between rounded-lg bg-white p-4 shadow-md"
+              className="mb-4 grid grid-cols-9 rounded-lg bg-white p-4 shadow-md"
             >
-              <div className="grid grid-cols-3 gap-24">
-                <h4 className="font-medium">{address.type}</h4>
-                <p className="text-sm text-gray-600">{address.address}</p>
-                <p className="text-sm text-gray-600">{address.phone}</p>
+              <div className="col-span-8 grid w-full grid-cols-5">
+                <h4 className="col-span-1 font-medium">{address.type}</h4>
+                <p className="col-span-2 text-sm text-gray-600">
+                  {address.address}
+                </p>
+                <p className="col-span-2 text-sm text-gray-600">
+                  {address.phone}
+                </p>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="col-span-1 flex items-center justify-end space-x-4">
                 <div className="flex items-center space-x-2">
                   <button>
                     <AiFillEdit
