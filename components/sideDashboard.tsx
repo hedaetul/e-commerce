@@ -17,7 +17,7 @@ const SideDashboard = () => {
       {/* Dashboard Section */}
       <div className="mb-6">
         <h2 className="mb-4 text-xl font-bold">Dashboard</h2>
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Link
             href="/orders"
             className={`flex items-center space-x-2 text-gray-700 hover:text-rose-500 ${
@@ -25,9 +25,7 @@ const SideDashboard = () => {
             }`}
           >
             <FaShoppingCart
-              className={`${
-                pathname === "/orders" ? "text-rose-500" : ""
-              }`}
+              className={`${pathname === "/orders" ? "text-rose-500" : ""}`}
             />
             <span>Orders</span>
           </Link>
@@ -38,9 +36,7 @@ const SideDashboard = () => {
             }`}
           >
             <FaHeart
-              className={`${
-                pathname === "/wishlist" ? "text-rose-500" : ""
-              }`}
+              className={`${pathname === "/wishlist" ? "text-rose-500" : ""}`}
             />
             <span>Wishlist</span>
           </Link>
@@ -54,9 +50,7 @@ const SideDashboard = () => {
           >
             <FaHeadset
               className={`${
-                pathname === "/support-tickets"
-                  ? "text-rose-500"
-                  : ""
+                pathname === "/support-tickets" ? "text-rose-500" : ""
               }`}
             />
             <span>Support Tickets</span>
@@ -67,7 +61,7 @@ const SideDashboard = () => {
       {/* Account Settings Section */}
       <div>
         <h2 className="mb-4 text-xl font-bold">Account Settings</h2>
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Link
             href="/profile"
             className={`flex items-center space-x-2 text-gray-700 hover:text-rose-500 ${
@@ -75,9 +69,7 @@ const SideDashboard = () => {
             }`}
           >
             <FaUser
-              className={`${
-                pathname === "/profile" ? "text-rose-500" : ""
-              }`}
+              className={`${pathname === "/profile" ? "text-rose-500" : ""}`}
             />
             <span>Profile Info</span>
           </Link>
@@ -88,9 +80,7 @@ const SideDashboard = () => {
             }`}
           >
             <FaAddressCard
-              className={`${
-                pathname === "/address" ? "text-rose-500" : ""
-              }`}
+              className={`${pathname === "/address" ? "text-rose-500" : ""}`}
             />
             <span>Address</span>
           </Link>
@@ -104,9 +94,7 @@ const SideDashboard = () => {
           >
             <FaCreditCard
               className={`${
-                pathname === "/payment-methods"
-                  ? "text-rose-500"
-                  : ""
+                pathname === "/payment-methods" ? "text-rose-500" : ""
               }`}
             />
             <span>Payment Methods</span>
