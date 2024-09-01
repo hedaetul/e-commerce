@@ -70,7 +70,7 @@ const Orders = () => {
                 </span>
               </div>
               <div className="text-gray-600">
-                {new Date(order.date).toLocaleDateString()}
+                {order.date}
               </div>
               <div className="text-gray-800 font-semibold">
                 ${order.totalAmount.toFixed(2)}
