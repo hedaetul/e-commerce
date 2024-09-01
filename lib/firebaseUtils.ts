@@ -6,12 +6,13 @@ import {
   limit,
   orderBy,
   query,
+  Timestamp,
 } from "firebase/firestore";
 import { auth, firestore } from "./firebase";
 
 export interface Order {
   orderId: string;
-  date: string ;
+  date: string;
   subtotal: number;
   totalAmount: number;
   shippingCharge: number;
@@ -26,7 +27,6 @@ export interface Order {
   discount: number;
   addFormData?: object; // Add other fields as needed
 }
-
 
 const getLatestOrder = async (userId: string) => {
   try {
@@ -75,7 +75,10 @@ const getPersonalDetails = async () => {
   }
 };
 
-const fetchOrdersAndCount = async (): Promise<{ numberOfOrders: number; orders: Order[] }> => {
+const fetchOrdersAndCount = async (): Promise<{
+  numberOfOrders: number;
+  orders: Order[];
+}> => {
   try {
     const userId = auth.currentUser?.uid;
     if (!userId) {
@@ -85,10 +88,24 @@ const fetchOrdersAndCount = async (): Promise<{ numberOfOrders: number; orders: 
     const ordersRef = collection(firestore, "users", userId, "orders");
     const querySnapshot = await getDocs(ordersRef);
 
-    const orders: Order[] = querySnapshot.docs.map((doc) => ({
-      orderId: doc.id,
-      ...doc.data(),
-    })) as Order[];
+    const orders: Order[] = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      const orderDate = (data.date as Timestamp).toDate();
+      const formattedDate = orderDate.toLocaleString();
+
+      return {
+        orderId: doc.id,
+        date: formattedDate, 
+        subtotal: data.subtotal,
+        totalAmount: data.totalAmount,
+        shippingCharge: data.shippingCharge,
+        paymentMethod: data.paymentMethod,
+        items: data.items,
+        tax: data.tax,
+        discount: data.discount,
+        addFormData: data.addFormData,
+      } as Order;
+    });
 
     return {
       numberOfOrders: orders.length,
@@ -99,6 +116,5 @@ const fetchOrdersAndCount = async (): Promise<{ numberOfOrders: number; orders: 
     return { numberOfOrders: 0, orders: [] };
   }
 };
-
 
 export { fetchOrdersAndCount, getLatestOrder, getPersonalDetails };
