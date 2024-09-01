@@ -99,9 +99,8 @@ const ProfilePage: React.FC = () => {
 
   return (
     <ProfileWrapper>
-      <div className="min-h-screen">
-        <div className="mx-auto max-w-4xl rounded-lg p-6">
-          {/* Header */}
+      <div >
+        <div className="mx-auto  rounded-lg p-6">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center">
               <FaUser className="mr-2 text-2xl text-red-500" />

@@ -13,7 +13,7 @@ const ProfileWrapper = ({
   return (
     <AppWrapper>
       <section className="bg-[#F6F6F6]">
-        <div className="container mx-auto grid grid-cols-4 gap-4 px-4 py-8">
+        <div className="container mx-auto grid grid-cols-4 gap-8 px-4 py-8">
           <div className="col-span-1">
             <SideDashboard />
           </div>
