@@ -9,12 +9,24 @@ import {
 } from "firebase/firestore";
 import { auth, firestore } from "./firebase";
 
-interface Order {
+export interface Order {
   orderId: string;
-  date: string;
+  date: string ;
   subtotal: number;
   totalAmount: number;
+  shippingCharge: number;
+  paymentMethod: string;
+  items: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+  tax: number;
+  discount: number;
+  addFormData?: object; // Add other fields as needed
 }
+
 
 const getLatestOrder = async (userId: string) => {
   try {
@@ -63,7 +75,7 @@ const getPersonalDetails = async () => {
   }
 };
 
-const fetchOrdersAndCount = async () => {
+const fetchOrdersAndCount = async (): Promise<{ numberOfOrders: number; orders: Order[] }> => {
   try {
     const userId = auth.currentUser?.uid;
     if (!userId) {
@@ -73,10 +85,10 @@ const fetchOrdersAndCount = async () => {
     const ordersRef = collection(firestore, "users", userId, "orders");
     const querySnapshot = await getDocs(ordersRef);
 
-    const orders = querySnapshot.docs.map((doc) => ({
+    const orders: Order[] = querySnapshot.docs.map((doc) => ({
       orderId: doc.id,
       ...doc.data(),
-    }));
+    })) as Order[];
 
     return {
       numberOfOrders: orders.length,
@@ -87,5 +99,6 @@ const fetchOrdersAndCount = async () => {
     return { numberOfOrders: 0, orders: [] };
   }
 };
+
 
 export { fetchOrdersAndCount, getLatestOrder, getPersonalDetails };
