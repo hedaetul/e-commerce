@@ -9,12 +9,14 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { categories } from "@/data/categories";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
 import { FaRegUser, FaShoppingCart, FaTruck } from "react-icons/fa";
 import { MdCategory, MdOutlineLocalGroceryStore } from "react-icons/md";
+import Bajar from "../../public/bajarsvg.svg";
 import AuthForm from "./authForm";
 
 const links = [
@@ -64,8 +66,8 @@ const Navbar: React.FC = () => {
     <div className="w-screen shadow-lg">
       <div className="container flex flex-col justify-between">
         <div className="relative flex h-[5rem] items-center justify-between gap-5">
-          <Link href="/" className="icon-7 flex items-center">
-            Bajar
+          <Link href="/" className="w-36 flex items-center">
+            <Image src={Bajar} className="h-full w-full" alt="bajar" />
           </Link>
 
           {/* Search bar and user icon for larger screens */}

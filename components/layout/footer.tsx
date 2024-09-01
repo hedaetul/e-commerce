@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import Bajar from '../../public/bajarsvg.svg'
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -10,8 +12,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {/* Company Details */}
           <div>
-            <Link href="/" className="icon-7 mb-4 block text-2xl font-bold">
-              Bajar
+            <Link href="/" className="w-36 mb-4 block text-2xl font-bold">
+            <Image src={Bajar} className="h-full w-full" alt="bajar" />
+             
             </Link>
             <p className="mb-2">202-Dessau Rd</p>
             <p className="mb-2">904 Pflugerville, Texas (TX)</p>
