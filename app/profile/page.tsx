@@ -2,14 +2,17 @@
 
 import Spinner from "@/components/custom/spinner";
 import AuthForm from "@/components/layout/authForm";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { fetchOrdersAndCount, getPersonalDetails } from "@/lib/firebaseUtils";
-import Image from "next/image";
+import {
+  fetchOrdersAndCount,
+  getPersonalInformation,
+} from "@/lib/firebaseUtils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import ProfileWrapper from "../ProfileWrapper";
+import EditableProfile from "./components/editableProfile";
+import Profile from "./components/profile";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -21,11 +24,16 @@ const ProfilePage: React.FC = () => {
     setErrorMessage("");
   };
 
-  const [personalDetails, setPersonalDetails] = useState<any>(null);
+  const [personalInformation, setPersonalInformation] = useState<any>(null);
   const [orderCount, setOrderCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
+  const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
+
+  const handleEdibility = () => {
+    setIsEditable(!isEditable);
+  };
 
   const handleLogout = async () => {
     try {
@@ -37,10 +45,10 @@ const ProfilePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchPersonalDetails = async () => {
+    const fetchPersonalInformation = async () => {
       try {
-        const details = await getPersonalDetails();
-        setPersonalDetails(details);
+        const details = await getPersonalInformation();
+        setPersonalInformation(details);
         setError(null);
       } catch (error) {
         setError("Failed to fetch personal details");
@@ -61,7 +69,7 @@ const ProfilePage: React.FC = () => {
 
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchPersonalDetails(), fetchOrderCount()]);
+      await Promise.all([fetchPersonalInformation(), fetchOrderCount()]);
       setLoading(false);
     };
 
@@ -99,81 +107,30 @@ const ProfilePage: React.FC = () => {
 
   return (
     <ProfileWrapper>
-      <div >
-        <div className="mx-auto  rounded-lg p-6">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center">
-              <FaUser className="mr-2 text-2xl text-red-500" />
-              <h1 className="text-2xl font-bold">My Profile</h1>
-            </div>
-            <button className="rounded-lg bg-rose-200 px-4 py-2 text-rose-600 hover:bg-rose-500 hover:text-white">
-              Edit profile
-            </button>
+      <div className="mx-auto rounded-lg p-6">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center">
+            <FaUser className="mr-2 text-2xl text-red-500" />
+            <h1 className="text-2xl font-bold">
+              {isEditable ? "Edit Profile" : "My Profile"}
+            </h1>
           </div>
-
-          <div className="mb-6 flex items-center rounded-lg bg-gray-50 p-4">
-            <Image
-              width="100"
-              height="100"
-              src={personalDetails?.photoUrl || <FaUser />}
-              alt="User"
-              className="mr-4 h-20 w-20 rounded-full"
-            />
-            <div>
-              <h2 className="text-xl font-semibold">
-                {personalDetails?.name || "Name not found"}
-              </h2>
-              <p className="text-gray-500">SILVER USER</p>
-              <p className="text-red-500">Balance: $500</p>
-            </div>
-          </div>
-
-          <div className="mb-6 grid grid-cols-4 gap-4">
-            <div className="rounded-lg bg-white p-4 text-center shadow">
-              <h3 className="text-2xl font-bold text-red-500">{orderCount}</h3>
-              <p className="text-gray-500">All Orders</p>
-            </div>
-            <div className="rounded-lg bg-white p-4 text-center shadow">
-              <h3 className="text-2xl font-bold text-red-500">02</h3>
-              <p className="text-gray-500">Awaiting Payments</p>
-            </div>
-            <div className="rounded-lg bg-white p-4 text-center shadow">
-              <h3 className="text-2xl font-bold text-red-500">00</h3>
-              <p className="text-gray-500">Awaiting Shipment</p>
-            </div>
-            <div className="rounded-lg bg-white p-4 text-center shadow">
-              <h3 className="text-2xl font-bold text-red-500">01</h3>
-              <p className="text-gray-500">Awaiting Delivery</p>
-            </div>
-          </div>
-
-          <div className="rounded-lg bg-gray-50 p-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-gray-500">Name</p>
-                <p className="text-lg">
-                  {personalDetails?.name || "Not Available"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500">Email</p>
-                <p className="text-lg">
-                  {personalDetails?.email || "Not Available"}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500">Login Method</p>
-                <p className="text-lg">
-                  {personalDetails?.loginMethod || "Not Available"}
-                </p>
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={handleEdibility}
+            className="rounded-lg bg-rose-200 px-4 py-2 text-rose-600 hover:bg-rose-500 hover:text-white"
+          >
+            {isEditable ? "Back to profile" : "Edit profile"}
+          </button>
         </div>
-        {user && (
-          <div className="flex w-full justify-end pr-12">
-            <Button onClick={handleLogout}>Logout</Button>
-          </div>
+        {isEditable ? (
+          <EditableProfile personalInformation={personalInformation} />
+        ) : (
+          <Profile
+            orderCount={orderCount}
+            personalInformation={personalInformation}
+            handleLogout={handleLogout}
+            user={user}
+          />
         )}
       </div>
     </ProfileWrapper>

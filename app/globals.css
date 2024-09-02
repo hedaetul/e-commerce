@@ -149,3 +149,13 @@
   box-shadow: 0 -4px 6px 0 rgba(0, 0, 0, 0.1); /* Adjust these values as needed */
 }
 
+.custom-input {
+  border-radius: 0.25rem;
+  border: 1px solid #d1d5db;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  outline-color: #9ca3af;
+  color: #374151;
+}
