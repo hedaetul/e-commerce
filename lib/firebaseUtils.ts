@@ -49,26 +49,26 @@ const getLatestOrder = async (userId: string) => {
   }
 };
 
-const getPersonalDetails = async () => {
+const getPersonalInformation = async () => {
   try {
     const userId = auth.currentUser?.uid;
     if (!userId) {
       throw new Error("User not authenticated");
     }
 
-    const detailsRef = doc(firestore, "users", userId);
-    const detailsSnap = await getDoc(detailsRef);
+    const informationRef = doc(firestore, "users", userId);
+    const informationSnap = await getDoc(informationRef);
 
-    if (!detailsSnap.exists()) {
+    if (!informationSnap.exists()) {
       throw new Error("No personal details found for user");
     }
 
-    const personalDetails = detailsSnap.data()?.personalInformation;
-    if (!personalDetails) {
+    const personalInformation = informationSnap.data()?.personalInformation;
+    if (!personalInformation) {
       throw new Error("Personal details are missing or undefined");
     }
 
-    return personalDetails;
+    return personalInformation;
   } catch (error) {
     console.error("Error fetching personal details:", error);
     throw error;
@@ -117,4 +117,4 @@ const fetchOrdersAndCount = async (): Promise<{
   }
 };
 
-export { fetchOrdersAndCount, getLatestOrder, getPersonalDetails };
+export { fetchOrdersAndCount, getLatestOrder, getPersonalInformation };
