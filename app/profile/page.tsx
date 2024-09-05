@@ -78,7 +78,7 @@ const ProfilePage: React.FC = () => {
     } else {
       setLoading(false);
     }
-  }, [user]);
+  }, [user,isEditable]);
 
   if (loading) {
     return (
@@ -123,7 +123,7 @@ const ProfilePage: React.FC = () => {
           </button>
         </div>
         {isEditable ? (
-          <EditableProfile personalInformation={personalInformation} />
+          <EditableProfile setIsEditable = {setIsEditable} personalInformation={personalInformation} />
         ) : (
           <Profile
             orderCount={orderCount}

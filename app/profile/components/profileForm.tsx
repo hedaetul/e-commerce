@@ -21,9 +21,10 @@ const ProfileSchema = z.object({
 type ProfileFormValues = z.infer<typeof ProfileSchema>;
 type ProfileFormProps = {
   personalInformation: any;
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ personalInformation }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ personalInformation,setIsEditable }) => {
   const { user } = useAuth();
 
   const form = useForm<ProfileFormValues>({
@@ -48,6 +49,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ personalInformation }) => {
       const userRef = doc(firestore, "users", user.uid);
       await updateDoc(userRef, { personalInformation: formData });
       console.log("user details updated sucessfully");
+      setIsEditable(false)
     } catch (error) {
       console.log("error");
     }

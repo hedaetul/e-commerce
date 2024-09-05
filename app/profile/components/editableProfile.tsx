@@ -1,10 +1,16 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import React from "react";
 import { BsCameraFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import ProfileForm from "./profileForm";
 
-const EditableProfile = ({ personalInformation }: { personalInformation: any }) => {
+type EditableProfileProps = {
+  personalInformation: any;
+  setIsEditable: React.Dispatch<React.SetStateAction<boolean>>;
+
+}
+
+const EditableProfile: React.FC<EditableProfileProps> = ({personalInformation,setIsEditable}) => {
   console.log(personalInformation);
 
   return (
@@ -23,7 +29,7 @@ const EditableProfile = ({ personalInformation }: { personalInformation: any }) 
       </div>
       <div className="flex flex-col gap-4">
         <div className="mx-auto w-full rounded-lg">
-          <ProfileForm personalInformation={personalInformation} />
+          <ProfileForm setIsEditable={setIsEditable} personalInformation={personalInformation} />
         </div>
       </div>
     </div>
