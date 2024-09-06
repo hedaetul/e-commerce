@@ -22,7 +22,7 @@ import AuthForm from "./authForm";
 const links = [
   { href: "/", text: "Home", icon: <AiOutlineHome /> },
   { href: "/profile", text: "User Account", icon: <FaRegUser /> },
-  { href: "#", text: "Vendor Account", icon: <FaRegUser /> },
+  { href: "/vendor-account", text: "Vendor Account", icon: <FaRegUser /> },
   { href: "#", text: "Track My Order", icon: <FaTruck /> },
   { href: "#", text: "Back to Demos", icon: <FaShoppingCart /> },
 ];

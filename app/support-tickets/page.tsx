@@ -37,7 +37,10 @@ const SupportTicket = () => {
         <div className="mx-auto w-full rounded-lg">
           <div className="flex flex-col gap-4">
             {tickets.map((ticket) => (
-              <div className="flex items-center justify-between rounded-md bg-white px-6 py-4 shadow-md">
+              <div
+                key={ticket.name}
+                className="flex items-center justify-between rounded-md bg-white px-6 py-4 shadow-md"
+              >
                 <div>
                   <h1 className="font-normal text-gray-800">{ticket.name}</h1>
                   <div className="flex gap-2">
@@ -52,7 +55,7 @@ const SupportTicket = () => {
                   </div>
                 </div>
                 <div>
-                  <FaArrowRightLong className="text-2xl text-gray-900 hover:text-3xl cursor-pointer" /> 
+                  <FaArrowRightLong className="cursor-pointer text-2xl text-gray-900 hover:text-3xl" />
                 </div>
               </div>
             ))}
