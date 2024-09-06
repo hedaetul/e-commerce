@@ -12,7 +12,7 @@ const SidebarMenu = () => {
       <div>
         <button className="mb-4 flex items-center text-gray-600">
           <FaBox size={20} className="mr-2" />
-          <span>Products</span> //add-producst
+          <span>Products</span>
           <span className="ml-auto text-gray-400">300</span>
         </button>
         <button className="mb-4 flex items-center text-gray-600">
