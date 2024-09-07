@@ -1,41 +1,58 @@
 "use client";
 
-import { useParams, usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaBox, FaCog, FaShoppingCart, FaTachometerAlt } from "react-icons/fa";
 import { MdOutlineFileUpload } from "react-icons/md";
 
 const SidebarMenu = () => {
-  const router = useRouter();
-  const pathName = usePathname()
+  const pathname = usePathname();
+
+  const menuItems = [
+    { href: "/vendor-account", icon: FaTachometerAlt, label: "Dashboard" },
+    {
+      href: "/vendor-account/products",
+      icon: FaBox,
+      label: "Products",
+      count: 300,
+    },
+    {
+      href: "/vendor-account/add-products",
+      icon: MdOutlineFileUpload,
+      label: "Add New Products",
+    },
+    {
+      href: "/vendor-account/orders",
+      icon: FaShoppingCart,
+      label: "Orders",
+      count: 40,
+    },
+    {
+      href: "/vendor-account/settings",
+      icon: FaCog,
+      label: "Account Settings",
+    },
+  ];
 
   return (
     <div className="rounded-md bg-white p-4 shadow-lg">
-      <div className="mb-8">
-        <button className="mb-4 flex items-center text-red-500">
-          <FaTachometerAlt size={20} className="mr-2" />
-          <span>Dashboard</span>
-        </button>
-      </div>
-      <div>
-        <button className="mb-4 flex items-center text-gray-600">
-          <FaBox size={20} className="mr-2" />
-          <span>Products</span>
-          <span className="ml-auto text-gray-400">300</span>
-        </button>
-        <button onClick={()=> router.push(`${pathName}/add-products`)} className="mb-4 flex items-center text-gray-600">
-          <MdOutlineFileUpload size={20} className="mr-2" />
-          <span>Add New Products</span>
-        </button>
-        <button className="mb-4 flex items-center text-gray-600">
-          <FaShoppingCart size={20} className="mr-2" />
-          <span>Orders</span>
-          <span className="ml-auto text-gray-400">40</span>
-        </button>
-        <button className="mb-4 flex items-center text-gray-600">
-          <FaCog size={20} className="mr-2" />
-          <span>Account Settings</span>
-        </button>
-      </div>
+      <nav>
+        {menuItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`mb-4 flex items-center ${
+              pathname === item.href ? "text-rose-500" : "text-gray-600"
+            } transition-colors duration-200 hover:text-rose-500`}
+          >
+            <item.icon size={20} className="mr-2" />
+            <span>{item.label}</span>
+            {item.count !== undefined && (
+              <span className=" ml-2 text-gray-400">{item.count}</span>
+            )}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 };
