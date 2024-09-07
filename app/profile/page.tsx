@@ -10,9 +10,9 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
-import ProfileWrapper from "../ProfileWrapper";
 import EditableProfile from "./components/editableProfile";
 import Profile from "./components/profile";
+import ProfileWrapper from "./components/ProfileWrapper";
 
 const ProfilePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -78,7 +78,7 @@ const ProfilePage: React.FC = () => {
     } else {
       setLoading(false);
     }
-  }, [user,isEditable]);
+  }, [user, isEditable]);
 
   if (loading) {
     return (
@@ -123,7 +123,10 @@ const ProfilePage: React.FC = () => {
           </button>
         </div>
         {isEditable ? (
-          <EditableProfile setIsEditable = {setIsEditable} personalInformation={personalInformation} />
+          <EditableProfile
+            setIsEditable={setIsEditable}
+            personalInformation={personalInformation}
+          />
         ) : (
           <Profile
             orderCount={orderCount}
