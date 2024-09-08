@@ -23,18 +23,11 @@ const AddProduct = () => {
       name: "",
       category: "",
       description: "",
-      brand: "",
     },
   });
   console.log(products);
 
-  const onSubmit = (values: ProductValues) => {
-    const updatedProducts = products.concat(values);
-    console.log(updatedProducts);
-    
-
-    
-  };
+  const onSubmit = (values: ProductValues) => {};
 
   return (
     <VendorWrapper>

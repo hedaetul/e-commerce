@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -39,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ control }) => {
   return (
     <FormField
       control={control}
-      name="image"
+      name="photo"
       render={({ field: { onChange, value } }) => (
         <FormItem>
           <FormLabel>Product Image</FormLabel>

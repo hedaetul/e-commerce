@@ -8,7 +8,7 @@ export const formSchema = z.object({
   category: z.string({
     required_error: "Please select a category.",
   }),
-  photo: z.any().optional(),
+  photo: z.any(),
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),

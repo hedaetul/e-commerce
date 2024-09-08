@@ -13,7 +13,7 @@ export interface Product {
   brand?: string;
   price: number;
   description: string;
-  photo?: any;
+  photo: any;
   category: string;
   stock: number;
 }
