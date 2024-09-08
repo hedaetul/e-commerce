@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   FormControl,
@@ -30,6 +30,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ control }) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
+        <FormField
+          control={control}
+          name="id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Id</FormLabel>
+              <FormControl>
+                <Input placeholder="Product Id" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name="name"
@@ -75,7 +88,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ control }) => {
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-              <Textarea className="resize-none" placeholder="Product description..." {...field} />
+              <Textarea
+                className="resize-none"
+                placeholder="Product description..."
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
