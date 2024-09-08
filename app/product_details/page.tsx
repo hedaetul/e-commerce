@@ -54,7 +54,7 @@ const ProductDetails: React.FC = () => {
             <p className="mt-2 text-2xl font-bold text-red-500">
               ${product.price.toFixed(2)}
             </p>
-            <p className="italic text-gray-800">{product.availability}</p>
+            <p className="italic text-gray-800">{product.stock}</p>
             <p className="text-md mt-4 text-gray-700">{product.description}</p>
 
             <Button

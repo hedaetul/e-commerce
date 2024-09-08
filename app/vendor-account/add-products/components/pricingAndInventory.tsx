@@ -43,12 +43,12 @@ const PricingAndInventory: React.FC<PricingAndInventoryProps> = ({
         />
         <FormField
           control={control}
-          name="tags"
+          name="brand"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tags</FormLabel>
+              <FormLabel>Brand</FormLabel>
               <FormControl>
-                <Input placeholder="Comma-separated tags" {...field} />
+                <Input placeholder="Brand" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -58,7 +58,7 @@ const PricingAndInventory: React.FC<PricingAndInventoryProps> = ({
       <div className="grid grid-cols-2 gap-4">
         <FormField
           control={control}
-          name="regularPrice"
+          name="price"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Regular Price</FormLabel>
@@ -66,24 +66,6 @@ const PricingAndInventory: React.FC<PricingAndInventoryProps> = ({
                 <Input
                   type="number"
                   placeholder="Regular Price"
-                  {...field}
-                  onChange={(e) => field.onChange(+e.target.value)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="salePrice"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Sale Price</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Sale Price"
                   {...field}
                   onChange={(e) => field.onChange(+e.target.value)}
                 />
