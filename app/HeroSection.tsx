@@ -10,8 +10,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useCart } from "@/context/CartContext";
-import products from "@/data/product";
-import React from "react";
+import { Product } from "@/lib/protuctType";
+import React, { useEffect, useState } from "react";
 import {
   FaDollarSign,
   FaLock,
@@ -19,14 +19,29 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 
-import { Product } from "@/data/product";
-
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product: Product) => {
     addToCart({ ...product, quantity: 1 });
   };
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/product");
+        const data = await res.json();
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Failed to fetch products: ", error);
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <section className="py-12">

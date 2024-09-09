@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import products from "@/data/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Package } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,6 +12,7 @@ import { formSchema } from "./components/formSchema";
 import ImageUpload from "./components/imageUpload";
 import PricingAndInventory from "./components/pricingAndInventory";
 import ProductDetails from "./components/productDetails";
+import products from '@/app/api/product/products.json'
 
 const AddProduct = () => {
   const router = useRouter();

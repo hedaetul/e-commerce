@@ -12,6 +12,7 @@ import React, { useRef, useState } from "react";
 import { Control } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./formSchema";
+import Image from "next/image";
 
 type ImageUploadProps = {
   control: Control<z.infer<typeof formSchema>>;
@@ -54,7 +55,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ control }) => {
               />
               {previewUrl ? (
                 <div className="mt-2">
-                  <img
+                  <Image
                     src={previewUrl}
                     alt="Preview"
                     className="mx-auto h-auto max-h-48 max-w-full"

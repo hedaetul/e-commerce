@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Product } from "@/data/product";
+import { Product } from "@/lib/protuctType";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -23,7 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       className="transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500"
     >
       <div className="cover h-fit w-full rounded-t-lg">
-        <Image
+        <Image 
           src={product.photo}
           alt={product.name}
           objectFit="cover"
