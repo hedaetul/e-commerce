@@ -48,7 +48,7 @@ const Carts: React.FC = () => {
                   <div className="flex items-center">
                     <Image
                       src={item.photo}
-                      alt={item.name}
+                      alt={item.name} width={100} height={100}
                       className="mr-4 h-16 w-16 object-cover"
                     />
                     <div>

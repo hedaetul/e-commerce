@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import products, { Product } from "@/data/product";
+import products from "../api/product/products.json"
+import { Product } from "@/lib/protuctType";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
