@@ -24,7 +24,8 @@ const VendorProducts = () => {
 
           {/* Product Table */}
           <div className="rounded-lg bg-white p-4 shadow-lg">
-            <div className="grid grid-cols-3 gap-4 border-b border-gray-200 p-2 font-semibold">
+            <div className="grid grid-cols-4 gap-4 border-b border-gray-200 p-2 font-semibold">
+              <span className="text-left">Product Id</span>
               <span className="text-left">Name</span>
               <span className="text-right">Price</span>
               <span></span> {/* Empty for arrow column */}
@@ -34,9 +35,10 @@ const VendorProducts = () => {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="grid grid-cols-3 items-center gap-4 border-b border-gray-200 p-2 hover:bg-gray-50"
+                className="grid grid-cols-4 items-center gap-4 border-b border-gray-200 p-2 hover:bg-gray-50"
               >
                 {/* Product Name and Image */}
+                <div className="text-gray-600">{product.id}</div>
                 <div className="flex items-center space-x-3">
                   <Image
                     src={product.photo}
