@@ -48,7 +48,7 @@ const SidebarMenu = () => {
             <item.icon size={20} className="mr-2" />
             <span>{item.label}</span>
             {item.count !== undefined && (
-              <span className=" ml-2 text-gray-400">{item.count}</span>
+              <span className="ml-2 text-gray-400">{item.count}</span>
             )}
           </Link>
         ))}

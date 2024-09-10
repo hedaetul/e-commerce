@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 export type CartItem = {
   id: string;
   name: string;
-  photo: any;
+  photo?: any;
   price: number;
   quantity: number;
 };

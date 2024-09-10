@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/custom/spinner";
 import ProductCard from "@/components/productCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +11,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useCart } from "@/context/CartContext";
-import { Product } from "@/lib/protuctType";
-import React, { useEffect, useState } from "react";
+import { useProducts } from "@/context/ProductsContext";
+import { Product } from "@/lib/productType";
+import React from "react";
 import {
   FaDollarSign,
   FaLock,
@@ -21,27 +23,11 @@ import {
 
 const HeroSection: React.FC = () => {
   const { addToCart } = useCart();
+  const { loading, products } = useProducts();
 
   const handleAddToCart = (product: Product) => {
     addToCart({ ...product, quantity: 1 });
   };
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/product");
-        const data = await res.json();
-        setProducts(data);
-        setLoading(false);
-      } catch (error) {
-        console.log("Failed to fetch products: ", error);
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   return (
     <section className="py-12">
@@ -163,15 +149,19 @@ const HeroSection: React.FC = () => {
           Deals of the day
         </h1>
 
-        <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

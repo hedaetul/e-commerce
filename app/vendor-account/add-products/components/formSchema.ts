@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const formSchema = z.object({
-  id: z.string().min(0, "Product Id is required."),
+  id: z.string(),
   name: z.string().min(2, {
     message: "Product name must be at least 2 characters.",
   }),
