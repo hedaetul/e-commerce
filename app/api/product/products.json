@@ -78,5 +78,23 @@
     "photo": "/products/Regatta.png",
     "category": "Fashion",
     "stock": 10
+  },
+  {
+    "id": "product-9",
+    "name": "Baba Yaga",
+    "category": "Electronics",
+    "description": "jg hgjy mhm yuj yjhy h",
+    "stock": 12,
+    "brand": "dgfhh",
+    "price": 1212
+  },
+  {
+    "id": "product-9",
+    "name": "Baba Yaga",
+    "category": "Electronics",
+    "description": "jg hgjy mhm yuj yjhy h",
+    "stock": 12,
+    "brand": "dgfhh",
+    "price": 1212
   }
 ]

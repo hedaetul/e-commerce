@@ -1,5 +1,6 @@
 "use client";
 
+import products from "@/app/api/product/products.json";
 import {
   FormControl,
   FormField,
@@ -22,11 +23,13 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./formSchema";
 
-type ProductDetailsProps = {
+type AddProductDetailsProps = {
   control: Control<z.infer<typeof formSchema>>;
 };
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({ control }) => {
+const newProductId = `product-${products.length + 1}`;
+
+const AddProductDetails: React.FC<AddProductDetailsProps> = ({ control }) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
@@ -37,7 +40,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ control }) => {
             <FormItem>
               <FormLabel>Id</FormLabel>
               <FormControl>
-                <Input placeholder="Product Id" {...field} />
+                <Input
+                  placeholder={newProductId}
+                  {...field}
+                  disabled
+                  title="This is the unique product ID. It will be automated."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,4 +110,4 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ control }) => {
   );
 };
 
-export default ProductDetails;
+export default AddProductDetails;
