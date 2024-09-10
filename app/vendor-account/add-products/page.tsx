@@ -34,7 +34,7 @@ const AddProduct = () => {
   const onSubmit = async (values: ProductValues) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/product", {
+      const response = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

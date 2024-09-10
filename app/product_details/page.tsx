@@ -13,7 +13,7 @@ import AppWrapper from "../AppWrapper";
 
 const ProductDetails: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); 
+  const [loading, setLoading] = useState<boolean>(true);
   const { addToCart } = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,16 +23,16 @@ const ProductDetails: React.FC = () => {
     if (productId) {
       const selectedProduct = products.find((p) => p.id === productId);
       setProduct(selectedProduct || null);
-      setLoading(false); 
+      setLoading(false);
     } else {
-      setLoading(false); 
+      setLoading(false);
     }
   }, [productId]);
 
   const handleAddToCart = () => {
     if (product) {
       addToCart({ ...product, quantity: 1 });
-      router.push('/carts')
+      router.push("/carts");
     }
   };
 
@@ -40,7 +40,7 @@ const ProductDetails: React.FC = () => {
     <AppWrapper>
       <section className="container mx-auto px-4 py-12">
         {loading ? (
-          <div className="flex justify-center items-center h-96">
+          <div className="flex h-96 items-center justify-center">
             <Spinner />
           </div>
         ) : product ? (
@@ -55,7 +55,9 @@ const ProductDetails: React.FC = () => {
               />
             </div>
             <div className="flex flex-1 flex-col gap-2 md:ml-6">
-              <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {product.name}
+              </h1>
               <h3 className="font-medium italic text-gray-700">
                 Brand: <span className="text-gray-800">{product.brand}</span>
               </h3>
@@ -63,12 +65,16 @@ const ProductDetails: React.FC = () => {
                 ${product.price.toFixed(2)}
               </p>
               <p className="italic text-gray-800">
-                {product.stock > 0 ? `In Stock (${product.stock})` : "Out of Stock"}
+                {product.stock > 0
+                  ? `In Stock (${product.stock})`
+                  : "Out of Stock"}
               </p>
-              <p className="text-md mt-4 text-gray-700">{product.description}</p>
+              <p className="text-md mt-4 text-gray-700">
+                {product.description}
+              </p>
 
               <Button
-                className="mt-6  rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:border-gray-500"
+                className="mt-6 rounded-md px-4 py-2 transition-colors duration-300 ease-in-out hover:border-gray-500"
                 onClick={handleAddToCart}
               >
                 <FaShoppingCart className="mr-2" />
@@ -78,7 +84,7 @@ const ProductDetails: React.FC = () => {
           </div>
         ) : (
           // Display if no product is found
-          <div className="flex justify-center items-center h-96">
+          <div className="flex h-96 items-center justify-center">
             <p className="text-xl text-gray-700">Product not found</p>
           </div>
         )}

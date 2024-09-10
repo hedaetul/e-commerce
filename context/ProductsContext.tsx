@@ -30,7 +30,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch("api/product", { method: "GET" });
+      const res = await fetch("/api/product", { method: "GET" });
       const data = await res.json();
       setProducts(data);
     } catch (error) {
