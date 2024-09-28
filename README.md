@@ -1,4 +1,4 @@
-# E-Commerce Platform
+# BAJAR(E-commerce Platform)
 
 ![E-Commerce Platform Banner](/public/readme-banner.png)
 
