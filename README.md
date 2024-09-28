@@ -69,7 +69,7 @@ To get a local copy up and running, follow these simple steps:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/e-commerce-platform.git
+   git clone https://github.com/hedaetul/e-commerce.git
    ```
 
 2. Install dependencies:
