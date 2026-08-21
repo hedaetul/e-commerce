@@ -9,15 +9,15 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { categories } from "@/data/categories";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AiOutlineHome, AiOutlineSearch } from "react-icons/ai";
 import { FaRegUser, FaShoppingCart, FaTruck } from "react-icons/fa";
 import { MdCategory, MdOutlineLocalGroceryStore } from "react-icons/md";
-import Bajar from "../../public/bajarsvg.svg";
 import AuthForm from "./authForm";
+import BrandMark from "./brand";
+import ThemeToggle from "./theme-toggle";
 
 const links = [
   { href: "/", text: "Home", icon: <AiOutlineHome /> },
@@ -63,49 +63,51 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="w-screen shadow-lg">
+    <div className="w-screen bg-background text-foreground shadow-lg">
       <div className="container flex flex-col justify-between">
         <div className="relative flex h-[5rem] items-center justify-between gap-5">
-          <Link href="/" className="w-36 flex items-center">
-            <Image src={Bajar} className="h-full w-full" alt="bajar" />
-          </Link>
+          <BrandMark />
 
           {/* Search bar and user icon for larger screens */}
           <div className="relative w-[40%] sm:w-1/2 md:ml-4 md:block md:w-[660px]">
-            <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 transform text-lg text-gray-400" />
+            <AiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 transform text-lg text-muted-foreground" />
             <input
               type="text"
-              className="h-[44px] w-full rounded-full border border-gray-200 pl-12 pr-5 outline-none focus:border-blue-300"
+              className="h-[44px] w-full rounded-full border border-border bg-card pl-12 pr-5 text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring"
               placeholder="Search"
             />
           </div>
           {/* Cart icon visible on small screens */}
-          <Link
-            href="/carts"
-            className="relative ml-4 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 md:hidden"
-          >
-            <MdOutlineLocalGroceryStore className="text-lg" />
-            {cartItemCount > 0 && (
-              <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                {cartItemCount}
-              </span>
-            )}
-          </Link>
+          <div className="ml-4 flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <Link
+              href="/carts"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-accent"
+            >
+              <MdOutlineLocalGroceryStore className="text-lg" />
+              {cartItemCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+          </div>
 
-          <div className="hidden gap-3 md:flex">
+          <div className="hidden items-center gap-3 md:flex">
+            <ThemeToggle />
             <span
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-secondary hover:bg-accent"
               onClick={handleUserIconClick}
             >
               <FaRegUser className="text-lg" />
             </span>
             <Link
               href="/carts"
-              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full bg-secondary hover:bg-accent"
             >
               <MdOutlineLocalGroceryStore className="text-lg" />
               {cartItemCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                <span className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
                   {cartItemCount}
                 </span>
               )}
@@ -116,9 +118,9 @@ const Navbar: React.FC = () => {
         <div className="hidden h-[3.75rem] items-center justify-between md:flex">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="flex items-center rounded px-4 py-1 hover:bg-slate-100">
+              <div className="flex items-center rounded px-4 py-1 hover:bg-secondary">
                 <MdCategory className="mr-2 text-lg" />
-                <p className="text-gray-600 hover:text-gray-900">Category</p>
+                <p className="text-muted-foreground hover:text-foreground">Category</p>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -135,7 +137,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={link.text}
                 href={link.href}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-muted-foreground hover:text-primary"
               >
                 {link.text}
               </Link>
@@ -154,18 +156,18 @@ const Navbar: React.FC = () => {
       )}
 
       {/* Sticky bottom navbar for small screens */}
-      <div className="shadow-btm fixed bottom-0 left-0 right-0 z-10 flex items-center justify-around bg-white p-2 md:hidden">
-        <Link href="/" className="text-gray-600 hover:text-gray-900">
+      <div className="shadow-btm fixed bottom-0 left-0 right-0 z-10 flex items-center justify-around border-t border-border bg-background p-2 md:hidden">
+        <Link href="/" className="text-muted-foreground hover:text-primary">
           <AiOutlineHome className="text-2xl" />
         </Link>
-        <Link href="/profile" className="text-gray-600 hover:text-gray-900">
+        <Link href="/profile" className="text-muted-foreground hover:text-primary">
           <FaRegUser className="text-2xl" />
         </Link>
         {/* Cart icon moved up, not repeated here */}
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="#" className="text-muted-foreground hover:text-primary">
           <FaTruck className="text-2xl" />
         </Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="#" className="text-muted-foreground hover:text-primary">
           <FaShoppingCart className="text-2xl" />
         </Link>
       </div>

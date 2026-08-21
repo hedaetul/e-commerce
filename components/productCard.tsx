@@ -22,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
     <div
       onClick={handleProductClick}
-      className="transform cursor-pointer rounded-lg border border-gray-200 bg-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-gray-500"
+      className="transform cursor-pointer rounded-lg border border-border bg-card text-card-foreground shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:border-primary"
     >
       <div className="cover h-fit w-full rounded-t-lg">
         <Image
@@ -35,13 +35,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         />
       </div>
       <div className="p-4 text-center md:p-6">
-        <h2 className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-gray-800 md:text-xl">
+        <h2 className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-semibold text-foreground md:text-xl">
           {product.name}
         </h2>
-        <p className="text-md mb-2 font-semibold text-red-500 md:text-lg">
+        <p className="text-md mb-2 font-semibold text-primary md:text-lg">
           ${product.price.toFixed(2)}
         </p>
-        <p className="mb-4 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-600">
+        <p className="mb-4 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-muted-foreground">
           {product.description}
         </p>
 

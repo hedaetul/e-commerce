@@ -4,7 +4,7 @@ import HeroSection from "./HeroSection";
 const Home = () => {
   return (
     <AppWrapper>
-      <div className="bg-[#F6F6F6]">
+      <div className="bg-background">
         <HeroSection />
       </div>
     </AppWrapper>

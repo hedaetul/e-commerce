@@ -11,7 +11,7 @@ const AppWrapper = ({
   className?: string;
 }) => {
   return (
-    <main>
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
       <div className={cn(className)}>{children}</div>
       <Footer />

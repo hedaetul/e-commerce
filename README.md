@@ -1,8 +1,8 @@
-# BAJAR(E-commerce Platform)
+# Mira Haat
 
-![E-Commerce Platform Banner](/public/readme-banner.png)
+![Mira Haat Banner](/public/readme-banner.png)
 
-A modern, feature-rich e-commerce platform built with Next.js and enhanced with various cutting-edge technologies.
+A modern, feature-rich marketplace built with Next.js and enhanced with various cutting-edge technologies.
 
 ## Table of Contents
 
@@ -49,7 +49,7 @@ A modern, feature-rich e-commerce platform built with Next.js and enhanced with 
 - **Payment Processing**:
   - Stripe
 - **UI/UX**:
-  - Lucide React,React Icons (for icons)
+  - Lucide React, React Icons (for icons)
   - Tailwind CSS
   - Shadcn UI
   - Radix UI
@@ -59,9 +59,9 @@ A modern, feature-rich e-commerce platform built with Next.js and enhanced with 
   - ESLint
   - Prettier
   - TypeScript
+  - Bun
 - **Deployment**:
   - Vercel
-
 
 ## Getting Started
 
@@ -69,21 +69,21 @@ To get a local copy up and running, follow these simple steps:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/hedaetul/e-commerce.git
+   git clone https://github.com/hedaetul/Mira-Haat.git
    ```
 
 2. Install dependencies:
    ```
-   cd e-commerce
-   yarn install
+   cd Mira-Haat
+   bun install
    ```
 
 3. Set up environment variables:
-   Create a `.env.local` file in the root directory and add necessary environment variables (e.g., Stripe keys, Firebase config).
+   Create a `.env.local` file in the root directory and add necessary environment variables (e.g., Stripe keys, Firebase config). You can copy `example.env` as a starting point.
 
 4. Run the development server:
    ```
-   yarn dev
+   bun dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -93,16 +93,15 @@ To get a local copy up and running, follow these simple steps:
 The project follows a standard Next.js structure with some custom directories:
 
 ```
-e-commerce-platform/
+Mira-Haat/
 ├── app/
 │   ├── api/
-│   ├── components/
 │   ├── profile/
 │   ├── vendor-account/
 │   └── ...
+├── components/
+├── context/
 ├── public/
-├── dist/
-├── styles/
 └── ...
 ```
 

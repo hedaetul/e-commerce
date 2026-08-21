@@ -71,7 +71,7 @@ const ConfirmationPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="print-only">
         <header className="flex-col-center gap-3 bg-gray-800 py-4 text-center text-white">
-          <h1 className="icon-7">Bajar</h1>
+          <h1 className="icon-7">Mira Haat</h1>
           <p className="text-lg italic text-rose-100">Order Confirmation</p>
         </header>
 
@@ -140,7 +140,7 @@ const ConfirmationPage: React.FC = () => {
           <p>
             If you have any questions or need assistance, please contact us:
           </p>
-          <p>Email: support@bajar.com | Phone: (123) 456-7890</p>
+          <p>Email: hedaetul.official@gmail.com | Phone: (123) 456-7890</p>
         </footer>
       </div>
       <div className="mt-8 text-center no-print">

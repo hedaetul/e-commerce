@@ -5,8 +5,8 @@ export const formSchema = z.object({
   name: z.string().min(2, {
     message: "Product name must be at least 2 characters.",
   }),
-  category: z.string({
-    required_error: "Please select a category.",
+  category: z.string().min(1, {
+    message: "Please select a category.",
   }),
   photo: z.any(),
   description: z.string().min(10, {

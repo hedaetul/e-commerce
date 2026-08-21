@@ -89,7 +89,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           <Dialog.Content className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="relative w-full max-w-sm rounded-lg bg-white p-8 shadow-lg">
               <Dialog.Title className="mb-4 text-center text-2xl font-semibold text-gray-800">
-                Welcome to Bajar
+                Welcome to Mira Haat
               </Dialog.Title>
               <p className="mb-6 text-center text-lg text-gray-600">
                 {isLogin ? "Log in to your account" : "Create a new account"}
