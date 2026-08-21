@@ -6,23 +6,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Control, FieldErrors } from "react-hook-form";
+import { Control, FieldErrors, FieldPath, FieldValues } from "react-hook-form";
 
-interface AddressFormFieldProps {
-  control: Control<any>;
-  name: string;
+interface AddressFormFieldProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label: string;
   placeholder: string;
-  errors: FieldErrors;
+  errors: FieldErrors<T>;
 }
 
-const AddressFormField = ({
+const AddressFormField = <T extends FieldValues>({
   control,
   name,
   label,
   placeholder,
   errors,
-}: AddressFormFieldProps) => (
+}: AddressFormFieldProps<T>) => (
   <FormField
     control={control}
     name={name}

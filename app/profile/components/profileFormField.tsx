@@ -6,28 +6,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
-import { Control, FieldErrors } from "react-hook-form";
+import { Control, FieldErrors, FieldPath, FieldValues } from "react-hook-form";
 
-interface ProfileFormFieldProps {
-  control: Control<any>;
-  name: string;
+interface ProfileFormFieldProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label: string;
-  type: any;
+  type: string;
   placeholder: string;
-  errors: FieldErrors;
-  personalInformation: any;
+  errors: FieldErrors<T>;
+  personalInformation?: unknown;
 }
 
-const ProfileFormField: React.FC<ProfileFormFieldProps> = ({
+const ProfileFormField = <T extends FieldValues>({
   control,
   name,
   type,
   label,
   placeholder,
   errors,
-  personalInformation,
-}) => (
+}: ProfileFormFieldProps<T>) => (
   <FormField
     control={control}
     name={name}
